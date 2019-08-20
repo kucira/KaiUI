@@ -12,6 +12,7 @@ import RadioButtonListItem from './components/RadioButtonListItem/RadioButtonLis
 import Separator from './components/Separator/Separator';
 import ProgressBar from './components/ProgressBar/ProgressBar';
 import Slider from './components/Slider/Slider';
+import Input from './components/Input/Input';
 import './App.scss';
 import colors from './theme/colors.scss';
 
@@ -19,6 +20,7 @@ function App() {
   const handleInputChange = newVal => {
     console.log('new input value', newVal);
   };
+
 
   return (
     <div className="App">
@@ -56,6 +58,17 @@ function App() {
                 onInputChange={handleInputChange}
                 buttonSide="right"
               />
+              <Input 
+                label="Label 1"
+                placeholder="Placeholder here 1"
+                onInputChange={handleInputChange}
+                focusColor={colors.gold} />
+              <Input 
+                label="Label 2"
+                placeholder="Placeholder here 2"
+                value='bind value'
+                onInputChange={handleInputChange}
+                focusColor={colors.gold} />
             </ListView>
             <ListView>
               <IconListItem
