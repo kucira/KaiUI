@@ -23,7 +23,7 @@ const Input = React.memo(
     const inputRef = useRef(null);
 
     const itemCls = `${prefixCls}-container`;
-    const secondaryCls = `${prefixCls}-container-secondary`;
+    const primaryCls = `${prefixCls}-container-primary`;
 
     const handleFocusChange = isNowFocused => {
       setFocused(isNowFocused);
@@ -45,7 +45,7 @@ const Input = React.memo(
         onFocus={() => handleFocusChange(true)}
         onBlur={() => handleFocusChange(false)}
       >
-        {label && (<span className={secondaryCls} 
+        {label && (<span className={primaryCls} 
                           style={{ color: isFocused ? colors.white : colors.black }}>{label}</span>)}
         <input ref={inputRef}
                 placeholder={placeholder}
