@@ -18,25 +18,27 @@
 
   span,
   label {
-  	padding:0;
+    padding: 0;
     width: 100%;
     overflow: hidden;
   }
 
-  input {
-  	margin-top:5px;
-  	padding:2px;
-  	padding-left:5px;
-  	padding-right:5px; 
-  	height:30px;
-	border:1px solid lightgray;
-	font-size:14px;
-	outline:none;
-	border-radius:3px;
-  }
-
   &:focus {
     color: var(--tl-text-focused);
+  }
+
+  > input{
+    outline: 0;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+    border-radius: 0.3rem;
+    border: 0.1rem solid gray;
+  }
+
+  > input:focus{
+    outline: 0;
+    border: 0.1rem solid white;
   }
 
   &-primary {

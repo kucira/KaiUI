@@ -8,8 +8,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "react-swipeable-views": "^0.13.3",
-    "scroll-into-view": "^1.9.7"
+    "react-swipeable-views": "^0.13.3"
   },
   "devDependencies": {
     "kdeploy": "kaiostech/kdeploy"
