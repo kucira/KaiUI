@@ -32,7 +32,9 @@ const CheckboxListItem = React.memo(
     }`;
     const primaryCls = `${prefixCls}-primary`;
     const secondaryCls = `${prefixCls}-secondary ${secondary ? '' : 'hidden'}`;
-    const inputCls = `${boxCls}-input-${isFocused ? 'focused' : 'unfocused'}`;
+    // const inputCls = `${boxCls}-input-${isFocused ? 'focused' : 'unfocused'}`;
+    const checkmarkCls = `${prefixCls}-checkmark`;
+    const inputCls = `checkmark-${isFocused ? 'focused' : 'unfocused'}`;
 
     useEffect(() => {
         const centerText = isChecked ? 'Deselect' : 'Select';
@@ -78,15 +80,25 @@ const CheckboxListItem = React.memo(
 
     const checkbox = (
       <div className={boxCls}>
-        <input
+        <div className="container">
+          <input type="checkbox"
+                  tabIndex="-1"
+                  type="checkbox"
+                  checked={props.isChecked !== null ? props.isChecked : isChecked}
+                  onChange={() => {}}
+                  onFocus={handleCheckFocus}
+                  onClick={handleInputChange} />
+          <span className={inputCls}></span>
+        { /* <input
           className={inputCls}
           tabIndex="-1"
           type="checkbox"
           checked={props.isChecked !== null ? props.isChecked : isChecked}
           onChange={() => {}}
           onFocus={handleCheckFocus}
-          onClick={handleInputChange}
-        />
+          onClick={handleInputChange} 
+        /> */}
+        </div>
       </div>
     );
 
