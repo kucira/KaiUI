@@ -55,15 +55,33 @@ const TabView = React.memo(
     };
 
     return (
-      <div className={prefixCls}>
-        <div className={tabViewTabs}>
-          <Tabs onChangeIndex={handleChangeIndex}>
-            {renderTabs()}
-          </Tabs>
-        </div>
+      // <div className={prefixCls}>
+      //   <div className={tabViewTabs}>
+      //     <Tabs onChangeIndex={handleChangeIndex}>
+      //       {renderTabs()}
+      //     </Tabs>
+      //   </div>
 
-        <div className={tabViewContent}>
-          <SwipeableViews
+      //   <div className={tabViewContent}>
+          // <SwipeableViews
+          //   axis={'x'}
+          //   index={activeTab}
+          //   onChangeIndex={handleChangeIndex}
+          //   onTransitionEnd={handleTransitionEnd}
+          //   disabled={true}
+          // >
+          //   {renderChildren()}
+          // </SwipeableViews>
+      //   </div>
+      // </div>
+      <>
+      <Tabs onChangeIndex={handleChangeIndex}>
+             {renderTabs()}
+           </Tabs>
+        <div style={{
+          marginTop:'2.6rem'
+        }}>
+        <SwipeableViews
             axis={'x'}
             index={activeTab}
             onChangeIndex={handleChangeIndex}
@@ -73,7 +91,8 @@ const TabView = React.memo(
             {renderChildren()}
           </SwipeableViews>
         </div>
-      </div>
+        
+      </>
     );
   }
 );

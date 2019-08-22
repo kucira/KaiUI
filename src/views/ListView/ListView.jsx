@@ -33,7 +33,6 @@ const ListView = React.memo(
             duration: 500,
             ease:'inCirc',
         });
-        console.log(itemRefs[index].current);
       },
       [itemRefs]
     );
