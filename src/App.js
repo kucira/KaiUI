@@ -141,7 +141,7 @@ function App() {
               />
               <ArrowListItem primary="Just me and arrow" />
             </ListView>
-          </TabView> */ }
+          </TabView>
         </div>
       </SoftKeyProvider>
     </div>
