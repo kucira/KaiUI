@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { SoftKeyConsumer } from '../SoftKey/withSoftKeyManager';
 import colors from '../../theme/colors.scss';
 
 import './Input.scss';
@@ -17,6 +18,9 @@ const Input = React.memo(
       placeholder,
       onInputChange,
       value,
+      centerText,
+      softKeyManager,
+      centerCallback,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
@@ -25,16 +29,28 @@ const Input = React.memo(
     const itemCls = `${prefixCls}-container`;
     const secondaryCls = `${prefixCls}-container-secondary`;
 
-    const handleFocusChange = isNowFocused => {
-      setFocused(isNowFocused);
-      if (isNowFocused) {
+    const handleFocusChange = useCallback(
+      isNowFocused => {
+        setFocused(isNowFocused);
+       if (isNowFocused) {
         onFocusChange(index);
         inputRef.current.focus();
+        softKeyManager.setSoftKeyTexts({
+          centerText: centerText,
+        });
+        softKeyManager.setSoftKeyCallbacks({
+            centerCallback:()=>{
+              centerCallback();
+            }
+        });
       }
       else{
         inputRef.current.blur();
       }
-    }
+      },
+      [index, onFocusChange, centerCallback, centerText, softKeyManager]
+    );
+
 
     return (
       <div
@@ -70,6 +86,8 @@ Input.propTypes = {
   onInputChange: PropTypes.func,
   placeholder: PropTypes.string,
   value: PropTypes.string,
+  centerText: PropTypes.string,
+  centerCallback: PropTypes.func,
 };
 
 Input.defaultProps = {
@@ -77,5 +95,10 @@ Input.defaultProps = {
 };
 
 export default React.forwardRef((props, ref) => (
-  <Input forwardedRef={ref} {...props} />
+  <SoftKeyConsumer>
+  {context => (
+    <Input softKeyManager={context} forwardedRef={ref} {...props} />
+  )}
+</SoftKeyConsumer>
+  
 ));
