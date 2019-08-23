@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header/Header';
 import { SoftKeyProvider } from './components/SoftKey/SoftKeyProvider';
 import TabView from './views/TabView/TabView';
@@ -14,18 +14,83 @@ import ProgressBar from './components/ProgressBar/ProgressBar';
 import Slider from './components/Slider/Slider';
 import './App.scss';
 import colors from './theme/colors.scss';
+import GridView from './views/GridView/GridView';
+import GridItem from './components/GridItem/GridItem';
+import Input from './components/Input/Input';
 
 function App() {
   const handleInputChange = newVal => {
     console.log('new input value', newVal);
   };
 
+  const [emoji, setEmoji] = useState('');
+
+
   return (
     <div className="App">
-      <Header text="KaiUI" backgroundColor={colors.headerPurple} />
+      <Header text="KaiUI" backgroundColor={colors.headerCyan} />
       <SoftKeyProvider>
         <div className="content">
-          <TabView tabLabels={['CB Tab', 'Icon Tab', 'Txt Tab', 'Misc Tab']}>
+          <GridView>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f600.png' 
+                      centerCallback={() => {
+                        let appendEmoji = emoji;
+                        appendEmoji += `😀`;
+                        const copyText = document.getElementsByTagName("input");
+                        copyText[0].value = appendEmoji;
+                      }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f62c.png' 
+                      centerCallback={() => {
+                        let appendEmoji = emoji;
+                        appendEmoji += `😬`;
+                        const copyText = document.getElementsByTagName("input");
+                        copyText[0].value = appendEmoji;
+                      }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f601.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f602.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f603.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f604.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f605.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f606.png' 
+            centerCallback={() => {
+              
+            }}/>
+            <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f607.png' 
+            centerCallback={() => {
+              
+            }}/>
+          </GridView>
+          <ListView>
+          <Input 
+              placeholder="Placeholder here 1"
+              onInputChange={handleInputChange}
+              focusColor={colors.lime} 
+              centerText='Copy'
+              centerCallback={()=>{
+                const copyText = document.getElementsByTagName("input");
+                console.log(copyText)
+                copyText[0].setSelectionRange(0, 99999);
+                const copy = document.execCommand('copy');
+                console.log(copy);
+              }}
+              />
+          </ListView>
+          {/* <TabView tabLabels={['CB Tab', 'Icon Tab', 'Txt Tab', 'Misc Tab']}>
             <ListView>
               <CheckboxListItem
                 primary="Hello primary text"
@@ -128,7 +193,7 @@ function App() {
               />
               <ArrowListItem primary="Just me and arrow" />
             </ListView>
-          </TabView>
+          </TabView> */}
         </div>
       </SoftKeyProvider>
     </div>

@@ -30,8 +30,6 @@ const ListView = React.memo(
         if(node !== null && node.current !== null){
           node.current.scrollIntoView({
             behavior: "smooth", 
-            block: "end", 
-            inline: "nearest"
           });
         }
       },

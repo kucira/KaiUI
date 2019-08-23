@@ -88,15 +88,6 @@ const CheckboxListItem = React.memo(
                   onFocus={handleCheckFocus}
                   onClick={handleInputChange} />
           <span className={inputCls}></span>
-        { /* <input
-          className={inputCls}
-          tabIndex="-1"
-          type="checkbox"
-          checked={props.isChecked !== null ? props.isChecked : isChecked}
-          onChange={() => {}}
-          onFocus={handleCheckFocus}
-          onClick={handleInputChange} 
-        /> */}
         </div>
       </div>
     );
