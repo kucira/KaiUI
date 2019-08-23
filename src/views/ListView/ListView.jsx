@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import scrollToComponent from 'react-scroll-to-component';
+import scrollIntoView from "scroll-into-view";
 import './ListView.scss';
 
 const prefixCls = 'kai-list-view';
@@ -27,11 +27,13 @@ const ListView = React.memo(
       index => 
       {
         ReactDOM.findDOMNode(itemRefs[index].current).focus();
-        scrollToComponent(itemRefs[index].current, {
-            offset: 0,
-            align: 'bottom',
-            duration: 500,
-            ease:'inCirc',
+        const node = ReactDOM.findDOMNode(itemRefs[index].current);
+        const element = document.getElementsByClassName('content');
+        scrollIntoView(element, {
+          time: 500,
+          align: {
+            top: 0
+          }
         });
       },
       [itemRefs]
