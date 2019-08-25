@@ -17,6 +17,7 @@ import colors from './theme/colors.scss';
 import GridView from './views/GridView/GridView';
 import GridItem from './components/GridItem/GridItem';
 import Input from './components/Input/Input';
+import Button from './components/Button/Button';
 
 function App() {
   const handleInputChange = newVal => {
@@ -31,7 +32,24 @@ function App() {
       <Header text="KaiUI" backgroundColor={colors.headerCyan} />
       <SoftKeyProvider>
         <div className="content">
-          <GridView>
+          { /* <ListView>
+            <BodyTextListItem header="Header text, but no body" />
+            <Input 
+              label='Username'
+              placeholder="username"
+              onInputChange={handleInputChange}
+              focusColor={colors.lime} 
+              />
+            <Input 
+              label='Password'
+              placeholder="password"
+              onInputChange={handleInputChange}
+              focusColor={colors.lime} 
+              />
+            <Button text='Register'/>
+            <Button text='Login'/>
+          </ListView>
+          {/* <GridView>
             <GridItem type='image' src='https://listemoji.com/assets/img/emoji/1f600.png' 
                       centerCallback={() => {
                         let appendEmoji = emoji;
@@ -89,7 +107,7 @@ function App() {
                 console.log(copy);
               }}
               />
-          </ListView>
+          </ListView> */}
           {/* <TabView tabLabels={['CB Tab', 'Icon Tab', 'Txt Tab', 'Misc Tab']}>
             <ListView>
               <CheckboxListItem

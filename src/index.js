@@ -1,9 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { HashRouter as Router } from 'react-router-dom';
+import { setGlobal } from 'reactn';
 import App from './App';
+import AppTele from './KaiTelegram/App.jsx';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+setGlobal({
+  login: {
+  	country:null,
+  	phoneNumber:'',
+  }
+});
+
+
+ReactDOM.render(
+	<Router>
+		<AppTele />
+	</Router>, 
+	document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
