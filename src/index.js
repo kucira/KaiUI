@@ -10,6 +10,8 @@ setGlobal({
   login: {
   	country:null,
   	phoneNumber:'',
+  	authCode:'',
+  	generateCode: false,
   }
 });
 

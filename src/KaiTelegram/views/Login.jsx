@@ -33,9 +33,6 @@ function Login(props) {
     
   }
 
-
-  
-
   return (
     <div className="App">
       <Header text="Kai Telegram" 
@@ -68,14 +65,16 @@ function Login(props) {
               onInputChange={handleInputChange}
               focusColor={colors.cyan}
               />
-            <Button text='Sign in'
-                    focusColor={colors.cyan}
-                    centerCallback={async ()=>{
-                      const inputPhone = document.getElementById('phone')
-                      setLogin({...login, phoneNumber:inputPhone.value});
-                      const result = await LoginController().login(phone, login.country.phoneCode);
-                      console.log(result);
-                    }}/>
+
+              <Button text='Next'
+                      focusColor={colors.cyan}
+                      centerCallback={async ()=>{
+                        const inputPhone = document.getElementById('phone');
+                        setLogin({...login, phoneNumber:inputPhone.value});
+                        //const result = await LoginController().login(phone);
+                        //console.log(result);
+                        history.push('/auth');
+                      }}/>
           </ListView>
         </div>
     </div>
