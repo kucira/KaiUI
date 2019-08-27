@@ -15,6 +15,7 @@ const IconListItem = React.memo(
       focusColor,
       forwardedRef,
       index,
+      children,
       onFocusChange
     } = props;
 
@@ -32,7 +33,6 @@ const IconListItem = React.memo(
         onFocusChange(index);
       }
     }
-
     return (
       <div
         tabIndex="0"
@@ -43,7 +43,9 @@ const IconListItem = React.memo(
         onBlur={() => handleFocusChange(false)}
       >
         <div className={iconCls}>
-          <span className={icon} />
+          <span className={icon}>
+            {children}
+          </span>
         </div>
         <div className={lineCls}>
           <span className={primaryCls}>{primary}</span>

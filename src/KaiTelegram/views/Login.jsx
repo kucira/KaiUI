@@ -71,8 +71,8 @@ function Login(props) {
                       centerCallback={async ()=>{
                         const inputPhone = document.getElementById('phone');
                         setLogin({...login, phoneNumber:inputPhone.value});
-                        //const result = await LoginController().login(phone);
-                        //console.log(result);
+                        const result = await LoginController().login(phone);
+                        console.log(result);
                         history.push('/auth');
                       }}/>
           </ListView>

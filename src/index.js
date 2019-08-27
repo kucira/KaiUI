@@ -12,7 +12,8 @@ setGlobal({
   	phoneNumber:'',
   	authCode:'',
   	generateCode: false,
-  }
+  },
+  chats: [],
 });
 
 

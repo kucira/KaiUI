@@ -11,6 +11,7 @@ import colors from '../../theme/colors.scss';
 
 function AuthCode(props) {
   const [ login, setLogin ] = useGlobal('login');
+  const [ chats, setChats ] = useGlobal('chats');
   const { history, location } = props;
 
   return (
@@ -30,9 +31,10 @@ function AuthCode(props) {
                 focusColor={colors.cyan}
                 centerCallback={async ()=>{
                   const authCode = document.getElementById('AuthCode').value;
-                  const result = await LoginController().auth(authCode);
+                  const result = await LoginController().authCode(authCode, login.phoneNumber);
+                  history.replace('/chats');
                 }}
-                leftCallback={async ()=>{
+                leftCallback={()=>{
                   history.goBack();
                 }}
                 />
