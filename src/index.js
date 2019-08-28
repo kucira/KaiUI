@@ -4,8 +4,10 @@ import { HashRouter as Router } from 'react-router-dom';
 import { setGlobal } from 'reactn';
 import App from './App';
 import AppTele from './KaiTelegram/App.jsx';
+import AppQuran from './MuslimCorner/App.jsx';
 import * as serviceWorker from './serviceWorker';
 
+// for telegram
 setGlobal({
   login: {
   	country:null,
@@ -15,6 +17,11 @@ setGlobal({
   },
   chats: [],
 });
+
+// for muslim corner
+// setGlobal({
+//   surah:[],
+// });
 
 
 ReactDOM.render(

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { SoftKeyConsumer } from '../SoftKey/withSoftKeyManager';
 import colors from '../../theme/colors.scss';
 
 import './ArrowListItem.scss';
@@ -14,7 +15,14 @@ const ArrowListItem = React.memo(
       focusColor,
       forwardedRef,
       index,
-      onFocusChange
+      onFocusChange,
+      centerText,
+      leftText,
+      rightText,
+      softKeyManager,
+      centerCallback,
+      leftCallback,
+      rightCallback,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
@@ -29,6 +37,22 @@ const ArrowListItem = React.memo(
       setFocused(isNowFocused);
       if (isNowFocused) {
         onFocusChange(index);
+        softKeyManager.setSoftKeyTexts({
+                        centerText: centerText,
+                        leftText: leftText,
+                        rightText: rightText,
+          });
+          softKeyManager.setSoftKeyCallbacks({
+              centerCallback: () => {
+                  centerCallback();
+              },
+              leftCallback: () => {
+                  leftCallback();
+              },
+              rightCallback: () => {
+                  rightCallback();
+              }
+          });
       }
     }
 
@@ -71,5 +95,9 @@ ArrowListItem.defaultProps = {
 };
 
 export default React.forwardRef((props, ref) => (
-  <ArrowListItem forwardedRef={ref} {...props} />
+  <SoftKeyConsumer>
+    {context => (
+      <ArrowListItem softKeyManager={context} forwardedRef={ref} {...props} />
+    )}
+  </SoftKeyConsumer>
 ));

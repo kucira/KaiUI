@@ -24,6 +24,7 @@ const TextListItem = React.memo(
       leftCallback,
       rightCallback,
       softKeyManager,
+      stylePrimary,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
@@ -65,7 +66,7 @@ const TextListItem = React.memo(
         onFocus={() => handleFocusChange(true)}
         onBlur={() => handleFocusChange(false)}
       >
-        <span className={primaryCls}>{primary}</span>
+        <span className={primaryCls} style={stylePrimary}>{primary}</span>
         <label className={secondaryCls}>{secondary}</label>
         <label className={tertiaryCls}>{tertiary}</label>
       </div>
@@ -90,6 +91,7 @@ TextListItem.propTypes = {
   centerCallback: PropTypes.func,
   leftCallback: PropTypes.func,
   rightCallback: PropTypes.func,
+  stylePrimary: PropTypes.object,
 };
 
 TextListItem.defaultProps = {
