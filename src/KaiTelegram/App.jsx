@@ -6,6 +6,7 @@ import Login from './views/Login';
 import Country from './views/Country';
 import AuthCode from './views/AuthCode';
 import Chats from './views/Chats';
+import Message from './views/Message';
 import Page from './components/Page'
 import '../App.scss';
 // import './index.scss';
@@ -18,10 +19,11 @@ class App extends Component {
         	<SoftKeyProvider>
             <div className="App">
 		      	<Switch>
-		      	    <Route exact path="/" component={Page(Login)}></Route>
-		        	<Route path="/country" component={Page(Country)}></Route>
+		      	  <Route exact path="/" component={Page(Login)}></Route>
+              <Route path="/country" component={Page(Country)}></Route>
               <Route path="/auth" component={Page(AuthCode)}></Route>
               <Route path="/chats" component={Page(Chats)}></Route>
+              <Route path="/message/:id/:title" component={Page(Message)}></Route> 
 		      	</Switch>
       		</div>
       		</SoftKeyProvider>

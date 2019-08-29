@@ -1,0 +1,82 @@
+@import '../../theme/fonts.scss';
+@import '../../theme/theme.scss';
+@import '../../theme/layout';
+@import '../../kai-font/style.scss';
+
+:root {
+  --il-text-focused: var(--color-gs00);
+  --il-icon-unfocused: var(--color-zeta);
+}
+
+.kai-listchat-avatar {
+    vertical-align: middle;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    padding: 1rem;
+}
+
+.kai-listchat-cut-text { 
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  white-space: nowrap;
+}
+
+.kai-listchat {
+  width: auto;
+  min-height: var(--list-item-height);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  outline: none;
+  &:focus {
+    color: var(--il-text-focused);
+  }
+
+  &-icon {
+    &-focused {
+      span::before {
+        @include list-item-icon;
+        color: var(--il-text-focused);
+      }
+    }
+
+    &-unfocused {
+      span::before {
+        @include list-item-icon;
+        color: var(--il-icon-unfocused);
+      }
+    }
+  }
+
+  &-line {
+    font-family: 'Open Sans';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 60%;
+    padding: 1rem 1rem 1rem 0;
+    span,
+    label {
+      padding: 0;
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+
+  &-primary {
+    @extend .p-pri;
+    font-size: 1.5rem;
+  }
+
+  &-secondary {
+    @extend .p-sec;
+    font-size: 1.2rem;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    word-wrap: break-word;
+    white-space: nowrap; 
+  }
+}

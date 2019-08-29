@@ -4,22 +4,39 @@ import axios from 'axios';
 
 const LoginController =  () => {
 	return {
-		login: async (_phoneNumber, _phoneCode) => {
-			const result = await axios.get(`http://localhost:3009/auth/0/${_phoneNumber}`);
+		getCode: async (_phoneNumber) => {
+			const result = await axios.post(`http://localhost:3009/getcode`, {			
+					phone:_phoneNumber,
+			});
 			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);
 			});
 		},
 		authCode: async (_code, _phoneNumber) => {
-			const result = await axios.get(`http://localhost:3009/auth/${_code}/${_phoneNumber}`);
+			const result = await axios.post(`http://localhost:3009/auth`, {
+					code:_code,
+					phone:_phoneNumber,
+			});
 			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);
 			});
 		},
-		getChat: async (_phoneNumber) => {
-			const result = await axios.get(`http://localhost:3009/chats/${_phoneNumber}`);
+		getChat: async (_chat_id, _phoneNumber) => {
+			const result = await axios.post(`http://localhost:3009/chat`, {
+					id:_chat_id,
+					phone:_phoneNumber,
+			});
+			console.log(result);
+			return new Promise(resolve => {
+				resolve(result);
+			});
+		},
+		getAllChat: async (_phoneNumber) => {
+			const result = await axios.post(`http://localhost:3009/all-chats`, {
+					phone:_phoneNumber,
+			});
 			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);

@@ -12,11 +12,8 @@ import colors from '../../theme/colors.scss';
 
 function Login(props) {
   const [ login, setLogin ] = useGlobal('login');
-  let phone = '';
-  let joinPhone = '';
   const handleInputChange = useCallback(value  => {
-    const inputPhone = document.getElementById('phone')
-    phone = inputPhone.value;
+    //const inputPhone = document.getElementById('phone')
   }, [login]);
   const { history, location } = props;
 
@@ -24,10 +21,7 @@ function Login(props) {
     const inputPhone = document.getElementById('phone')
     if(login.country)
       inputPhone.value = login.country.phoneCode;
-  }, [login])
-
-  useEffect(() => {
-  }, [])
+  }, [login]);
 
   const onUpdate = (e) => {
     
@@ -68,11 +62,11 @@ function Login(props) {
 
               <Button text='Next'
                       focusColor={colors.cyan}
-                      centerCallback={async ()=>{
+                      centerCallback={ ()=>{
                         const inputPhone = document.getElementById('phone');
-                        setLogin({...login, phoneNumber:inputPhone.value});
-                        const result = await LoginController().login(phone);
-                        console.log(result);
+                        // setLogin({...login, phoneNumber:inputPhone.value});
+                        // const result = await LoginController().getCode(phone);
+                        // console.log(result);
                         history.push('/auth');
                       }}/>
           </ListView>

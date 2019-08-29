@@ -7,9 +7,10 @@ import { withRouter } from 'react-router-dom';
 import BodyTextListItem from '../../components/BodyTextListItem/BodyTextListItem';
 import ListView from '../../views/ListView/ListView';
 import Input from '../../components/Input/Input';
-import IconListItem from '../../components/TextListItem/TextListItem';
+import ListChat from '../components/ListChat';
 import LoginController from '../controllers/LoginController';
 import countryList from '../config/country-list';
+import mockChats from '../config/mock-chats';
 import colors from '../../theme/colors.scss';
 
 function Chats(props) {
@@ -30,17 +31,25 @@ function Chats(props) {
           clearInterval(id);
           id = null;
           const input = document.getElementById('SearchChatInput');
+          const chatFilter = chats.filter(c => c.title.toLowerCase().includes(input.value.toLowerCase()));
+          setChatsList(chatFilter);
         }
       }, 100);
     }
     
-  }, [chats]);
+  }, [chatsList]);
 
   const { history } = props;
   
-  useEffect(async () => {
-    const chats = await LoginController().getChat(login.phoneNumber);
-    setChats(chats);
+  useEffect(() => {
+    const fetchData = async ()=> {
+      // const chats = await LoginController().getAllChat(login.phoneNumber);
+      // console.log(chats);
+      //setChats(chats);      
+    }
+    setChats(mockChats);
+    setChatsList(mockChats);
+    fetchData();
   }, [])
 
   return (
@@ -63,21 +72,23 @@ function Chats(props) {
               }}
             />
             {
-              chats.map(c => (
-                <IconListItem
+              chatsList.map(c => (
+                <ListChat
                   key={Math.random()}
-                  primary={'hello'}
-                  secondary={'hello'}
+                  primary={c.title}
+                  secondary={c.last_message.content['@type'] === 'messageCustomServiceAction' ? 
+                    c.last_message.content.text :
+                    c.last_message.content.text.text
+                  }
+                  data={c}
                   focusColor={colors.cyan}
                   centerText='Select'
                   leftText='more'
                   rightText='options'
                   centerCallback={()=> {
-                    
+                    history.push('/message/1/Telegram')
                   }}
-                >
-                  <span>img</span>
-                </IconListItem>
+                />
               ))
             }
           </ListView>

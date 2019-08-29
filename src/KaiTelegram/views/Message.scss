@@ -1,0 +1,23 @@
+@import '../../theme/fonts.scss';
+@import '../../theme/theme.scss';
+@import '../../theme/layout';
+@import '../../kai-font/style.scss';
+
+.discussion {
+  list-style: none;
+  background: #e5e5e5;
+  li {
+    padding: 0.5rem;
+    overflow: hidden;
+    display: flex;
+  }
+  .avatar {
+    width: 40px; // stronger than %
+    // could set height, but gonna bottom-align instead
+    position: relative; // for triangle
+    img {
+      display: block; // triangle position
+      width: 100%;
+    }
+  }
+}

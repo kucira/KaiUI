@@ -11,7 +11,7 @@ import * as serviceWorker from './serviceWorker';
 setGlobal({
   login: {
   	country:null,
-  	phoneNumber:'',
+  	phoneNumber:'+6289637029875',
   	authCode:'',
   	generateCode: false,
   },
