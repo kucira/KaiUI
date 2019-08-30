@@ -1,0 +1,34 @@
+.kai-option {
+  height:100vh;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.kai-option .flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-end;
+  height: 82vh; 
+}
+
+.kai-option .flex-start { 
+  -webkit-align-content: flex-start; 
+  align-content: flex-start; 
+}
+
+.kai-option .flex-end { 
+  -webkit-align-content: flex-end; 
+  align-content: flex-end; 
+}
+
+.kai-option .header {
+    display:flex;
+    justify-content:center;
+    height:3rem;
+    background:lightgray;
+}
+
+.kai-option .header-items {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+}

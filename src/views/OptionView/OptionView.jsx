@@ -1,0 +1,142 @@
+import React, { useState, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import './OptionView.scss';
+
+const prefixCls = 'kai-option';
+
+const OptionView = React.memo(
+  props => {
+    const itemRefs = [];
+
+    const [activeItem, setActiveItem] = useState(0);
+
+    const {
+      header,
+      children,
+      onChangeIndex,
+      isActive,
+    } = props;
+
+    const [isFocused, setFocused] = useState(false);
+   
+
+    const handleChangeIndex = itemIndex => {
+      setActiveItem(itemIndex);
+      onChangeIndex(itemIndex);
+    };
+
+    const setFocusToIndex = useCallback(
+      index => 
+      {
+        ReactDOM.findDOMNode(itemRefs[index].current).focus();
+        const node = itemRefs[index];
+        if(node !== null && node.current !== null){
+          node.current.scrollIntoView({
+            behavior: "smooth", 
+            block: "end", 
+          });
+        }
+      },
+      [itemRefs]
+    );
+
+    const handleKeyDown = useCallback(
+      e => {
+        let index = activeItem;
+        if (!isActive) {
+          return;
+        }
+
+        switch (e.key) {
+          case 'ArrowUp':
+            // looping to bottom
+            index = index - 1 >= 0 ? index - 1 : itemRefs.length - 1;
+            setFocusToIndex(index);
+            break;
+          case 'ArrowDown':
+            // looping to top
+            index = index + 1 < itemRefs.length ? index + 1 : 0;
+            setFocusToIndex(index);
+            break;
+          default:
+            break;
+        }
+      },
+      [isActive, activeItem, setFocusToIndex, itemRefs]
+    );
+
+    useEffect(
+      () => {
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+      },
+      [handleKeyDown]
+    );
+
+    useEffect(
+      () => {
+        if(isActive) {
+          setFocusToIndex(activeItem)
+        }
+      },
+      [isActive, setFocusToIndex, activeItem]
+    );
+
+    const itemCls = prefixCls;
+
+    const renderChildren = () => {
+      let index = -1;
+      return React.Children.map(children, child => {
+        // Don't focus on separators
+        if (child.props.separatorText != null) {
+          return child;
+        }
+        index++;
+        const newRef = React.createRef();
+        itemRefs[index] = newRef;
+        return React.cloneElement(child, {
+          index,
+          onFocusChange: handleChangeIndex,
+          ref: newRef,
+        });
+      });
+    };
+
+    return (
+      <div>
+      	<div className={itemCls}>
+
+      		<div className="flex-container">
+		      	<div className="header">
+		      		<div className="header-items" >{header}</div>
+		      	</div>
+              <div style={{
+                display:'flex',
+                flexDirection:'column',
+                overflow:'hidden',
+                height:children.length > 2 ? '60%' : `46%`,
+              }}>
+                {renderChildren()}
+              </div>
+      		</div>
+      	</div>
+      	
+      </div>
+    );
+  }
+);
+
+OptionView.propTypes = {
+  children: PropTypes.array.isRequired,
+  onChangeIndex: PropTypes.func,
+  // Refocus on tab change
+  isActive: PropTypes.bool,
+};
+
+OptionView.defaultProps = {
+  onChangeIndex: () => {},
+  isActive: true,
+};
+
+export default OptionView;

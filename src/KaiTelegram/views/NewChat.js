@@ -10,12 +10,13 @@ import Input from '../../components/Input/Input';
 import ListChat from '../components/ListChat';
 import LoginController from '../controllers/LoginController';
 import countryList from '../config/country-list';
-import mockChats from '../config/mock-chats';
 import colors from '../../theme/colors.scss';
 
-function Chats(props) {
+function NewChat(props) {
 
-  const [chatsList, setChatsList] = useState([]);
+  const [contactList, setContactList] = useState([{
+    name:'Jono'
+  }]);
   const [ login, setLogin ] = useGlobal('login');
   const [ chats, setChats ] = useGlobal('chats');
   let id;
@@ -30,14 +31,12 @@ function Chats(props) {
         else{
           clearInterval(id);
           id = null;
-          const input = document.getElementById('SearchChatInput');
-          const chatFilter = chats.filter(c => c.title.toLowerCase().includes(input.value.toLowerCase()));
-          setChatsList(chatFilter);
+          const input = document.getElementById('SearchContactInput');
         }
       }, 100);
     }
     
-  }, [chatsList]);
+  }, [contactList]);
 
   const { history } = props;
   
@@ -47,8 +46,6 @@ function Chats(props) {
       // console.log(chats);
       //setChats(chats);      
     }
-    setChats(mockChats);
-    setChatsList(mockChats);
     fetchData();
   }, [])
 
@@ -59,34 +56,29 @@ function Chats(props) {
         <div className="content">
           <ListView >
             <Input 
-              id='SearchChatInput'
+              id='SearchContactInput'
               label='Search'
-              placeholder="Search Chats"
+              placeholder="Search Contact"
               onInputChange={handleInputChange}
               focusColor={colors.cyan}
               centerText=''
-              leftText='New Chat'
-              rightText='Options'
+              leftText='more'
+              rightText='options'
               leftCallback={()=> {
-                history.push('/newchat');
+                history.goBack();
               }}
             />
             {
-              chatsList.map(c => (
+              contactList.map(c => (
                 <ListChat
                   key={Math.random()}
-                  primary={c.title}
-                  secondary={c.last_message.content['@type'] === 'messageCustomServiceAction' ? 
-                    c.last_message.content.text :
-                    c.last_message.content.text.text
-                  }
-                  data={c}
+                  primary={c.name}
                   focusColor={colors.cyan}
                   centerText='Select'
-                  leftText='New Chat'
-                  rightText='Options'
+                  leftText='more'
+                  rightText='options'
                   centerCallback={()=> {
-                    history.push(`/message/${c.id}/${c.title}`);
+                    history.push('/message/1/Telegram')
                   }}
                 />
               ))
@@ -97,4 +89,4 @@ function Chats(props) {
   );
 }
 
-export default withRouter(Chats);
+export default withRouter(NewChat);

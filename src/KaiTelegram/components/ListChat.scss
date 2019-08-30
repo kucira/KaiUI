@@ -68,12 +68,12 @@
 
   &-primary {
     @extend .p-pri;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
   }
 
   &-secondary {
     @extend .p-sec;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     text-overflow: ellipsis;
     overflow: hidden; 
     word-wrap: break-word;

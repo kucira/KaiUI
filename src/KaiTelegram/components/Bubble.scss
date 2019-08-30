@@ -32,9 +32,11 @@
 .self {
   justify-content: flex-end;
   align-items: flex-end;
+
   .messages {
     order: 1;
     border-bottom-right-radius: 0; // weird shadow fix
+    background: deepskyblue;
   }
   .avatar {
     order: 2;

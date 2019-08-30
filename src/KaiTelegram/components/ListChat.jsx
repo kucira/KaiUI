@@ -78,18 +78,18 @@ const ListChat = React.memo(
           <label className={secondaryCls}>{secondary}</label>
           <div style={{
             position:'relative',
-            top:'1.1rem',
+            top:secondary ? '1rem' : '1.8rem',
             width:'100vw',
             borderBottom: '1px solid lightgray',
           }}/>
         </div>
         <div>
-          <div>{moment(data.last_message.date).format('HH:mm')}</div>
+          <div>{ data && moment(data.last_message.date).format('HH:mm')}</div>
           <div style={{
             borderRadius:'1rem',
             backgroundColor:'lightblue',
             textAlign:'center',
-          }}>{data.unread_count > 0 && data.unread_count}</div>
+          }}>{data && data.unread_count > 0 && data.unread_count}</div>
         </div>
       </div>
     );

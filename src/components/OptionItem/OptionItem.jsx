@@ -3,33 +3,31 @@ import PropTypes from 'prop-types';
 import { SoftKeyConsumer } from '../SoftKey/withSoftKeyManager';
 import colors from '../../theme/colors.scss';
 
-import './BodyTextListItem.scss';
+import './OptionItem.scss';
 
-const prefixCls = 'kai-btl';
+const prefixCls = 'kai-option-item';
 
-const BodyTextListItem = React.memo(
+const OptionItem = React.memo(
   props => {
     const {
-      header,
-      body,
+      primary,
       focusColor,
       forwardedRef,
       index,
       onFocusChange,
-      leftText,
       centerText,
-      rightText,
+      softKeyManager,
       centerCallback,
       leftCallback,
       rightCallback,
-      softKeyManager,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
 
     const itemCls = prefixCls;
-    const headerCls = `${prefixCls}-header`;
-    const bodyCls = `${prefixCls}-body ${body ? '' : 'hidden'}`;
+    const iconCls = `${prefixCls}-icon-${isFocused ? 'focused' : 'unfocused'}`;
+    const lineCls = `${prefixCls}-line`;
+    const primaryCls = `${prefixCls}-primary`;
 
     const handleFocusChange = isNowFocused => {
       setFocused(isNowFocused);
@@ -37,8 +35,6 @@ const BodyTextListItem = React.memo(
         onFocusChange(index);
         softKeyManager.setSoftKeyTexts({
                         centerText: centerText,
-                        leftText: leftText,
-                        rightText: rightText,
           });
           softKeyManager.setSoftKeyCallbacks({
               centerCallback: () => {
@@ -63,16 +59,17 @@ const BodyTextListItem = React.memo(
         onFocus={() => handleFocusChange(true)}
         onBlur={() => handleFocusChange(false)}
       >
-        <span className={headerCls}>{header}</span>
-        <label className={bodyCls}>{body}</label>
+        <div className={lineCls}>
+          <span className={primaryCls}>{primary}</span>
+        </div>
       </div>
     );
   }
 );
 
-BodyTextListItem.propTypes = {
-  header: PropTypes.string.isRequired,
-  body: PropTypes.string,
+OptionItem.propTypes = {
+  primary: PropTypes.string.isRequired,
+  secondary: PropTypes.string,
   focusColor: PropTypes.string,
   forwardedRef: PropTypes.oneOfType([
     PropTypes.func,
@@ -80,26 +77,16 @@ BodyTextListItem.propTypes = {
   ]),
   index: PropTypes.number,
   onFocusChange: PropTypes.func,
-  centerText: PropTypes.string,
-  leftText: PropTypes.string,
-  rightText: PropTypes.string,
-  centerCallback: PropTypes.func,
-  leftCallback: PropTypes.func,
-  rightCallback: PropTypes.func,
 };
 
-BodyTextListItem.defaultProps = {
-  body: null,
+OptionItem.defaultProps = {
   focusColor: colors.defaultFocusColor,
-  centerCallback: ()=>{},
-  leftCallback: ()=>{},
-  rightCallback: ()=>{},
 };
 
 export default React.forwardRef((props, ref) => (
- <SoftKeyConsumer>
-  {context => (
-    <BodyTextListItem softKeyManager={context} forwardedRef={ref} {...props} />
-  )}
-</SoftKeyConsumer>
+  <SoftKeyConsumer>
+    {context => (
+      <OptionItem softKeyManager={context} forwardedRef={ref} {...props} />
+    )}
+  </SoftKeyConsumer>
 ));
