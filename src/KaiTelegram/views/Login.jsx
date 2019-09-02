@@ -8,6 +8,10 @@ import ListView from '../../views/ListView/ListView';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import LoginController from '../controllers/LoginController';
+import { askForPermissionToReceiveNotifications } from '../Utils/PushNotification';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
+import axios from 'axios';
 import colors from '../../theme/colors.scss';
 
 function Login(props) {
@@ -22,6 +26,33 @@ function Login(props) {
     if(login.country)
       inputPhone.value = login.country.phoneCode;
   }, [login]);
+
+  useEffect(() => {
+    async function getToken() {
+      const token = await askForPermissionToReceiveNotifications();
+      console.log(token);
+      //save token
+      localStorage.setItem('ft', token);
+     const messaging = firebase.messaging();
+
+      messaging.onMessage((payload) => {
+      
+        console.log('Message received. ', JSON.parse(payload.data.payload));
+        // ...
+      });
+
+    // const currentToken = await messaging.getToken();
+    //    if (currentToken) {
+    //       console.log(currentToken);
+    //     } else {
+    //       // Show permission request.
+    //       console.log('No Instance ID token available. Request permission to generate one.');
+    //       // Show permission UI.
+    //   }
+    }
+  getToken();
+
+  }, []);
 
   const onUpdate = (e) => {
     
@@ -62,11 +93,13 @@ function Login(props) {
 
               <Button text='Next'
                       focusColor={colors.cyan}
-                      centerCallback={ ()=>{
+                      centerCallback={async ()=>{
                         const inputPhone = document.getElementById('phone');
-                        // setLogin({...login, phoneNumber:inputPhone.value});
-                        // const result = await LoginController().getCode(phone);
-                        // console.log(result);
+                        const phone = inputPhone.value;
+                        setLogin({...login, phoneNumber:inputPhone.value});
+                        const token = localStorage.getItem('ft');
+                        const result = await LoginController().getCode(phone, token);
+                        console.log(result);
                         history.push('/auth');
                       }}/>
           </ListView>

@@ -8,6 +8,36 @@
 import { formatNumber } from 'libphonenumber-js';
 import { PHOTO_SIZE, PHOTO_THUMBNAIL_SIZE } from '../Constants';
 
+
+function convertDataURIToBinary(dataURI) {
+    var byteCharacters = atob(dataURI);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([ byteArray ], {
+       type : undefined
+    });
+    return byteArray;
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 function isAppleDevice() {
     const iDevices = ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod', 'MacIntel'];
 
@@ -447,5 +477,7 @@ export {
     getRandomInt,
     isAppleDevice,
     historyEquals,
-    insertByOrder
+    insertByOrder,
+    urlBase64ToUint8Array,
+    convertDataURIToBinary
 };

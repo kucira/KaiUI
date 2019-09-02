@@ -29,9 +29,10 @@ function AuthCode(props) {
                 rightText=''
                 onInputChange={()=>{}}
                 focusColor={colors.cyan}
-                centerCallback={ ()=>{
+                centerCallback={ async ()=>{
                   const authCode = document.getElementById('AuthCode').value;
-                  // const result = await LoginController().authCode(authCode, login.phoneNumber);
+                  const token = localStorage.getItem('ft');
+                  const result = await LoginController().authCode(authCode, login.phoneNumber, token);
                   history.replace('/chats');
                 }}
                 leftCallback={()=>{

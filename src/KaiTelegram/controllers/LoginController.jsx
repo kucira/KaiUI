@@ -4,19 +4,21 @@ import axios from 'axios';
 
 const LoginController =  () => {
 	return {
-		getCode: async (_phoneNumber) => {
+		getCode: async (_phoneNumber, token) => {
 			const result = await axios.post(`http://localhost:3009/getcode`, {			
 					phone:_phoneNumber,
+					token,
 			});
 			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);
 			});
 		},
-		authCode: async (_code, _phoneNumber) => {
+		authCode: async (_code, _phoneNumber, token) => {
 			const result = await axios.post(`http://localhost:3009/auth`, {
 					code:_code,
 					phone:_phoneNumber,
+					token,
 			});
 			console.log(result);
 			return new Promise(resolve => {

@@ -9,6 +9,10 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
+import { convertDataURIToBinary } from './KaiTelegram/Utils/Common';
+import axios from 'axios';
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -19,6 +23,30 @@ const isLocalhost = Boolean(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
     )
 );
+
+export function askPermission() {
+  return new Promise(function(resolve, reject) {
+
+    const permissionResult = Notification.requestPermission(function(result) {
+      resolve(result);
+    });
+
+    if (permissionResult) {
+      permissionResult.then(resolve, reject);
+    }
+  })
+  .then(function(permissionResult) {
+    if (permissionResult !== 'granted') {
+      throw new Error('We weren\'t granted permission.');
+    }
+  });
+}
+
+function sendSubscription(subscription) {
+  return axios.post(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
+    subscription: JSON.stringify(subscription),
+  });
+}
 
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
@@ -57,7 +85,35 @@ export function register(config) {
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
-    .then(registration => {
+    .then(async registration => {
+
+      //registers web push
+      // console.log('registering push... ', registration);
+      // const convertVapidKeys = convertDataURIToBinary(String(process.env.REACT_APP_VAPID_PUBLIC_KEY));
+      // const permission = await askPermission();
+      // console.log(permission);
+
+      // const subscription = await registration.pushManager.getSubscription();
+      // console.log(subscription);
+      // if(subscription){
+      //   sendSubscription(subscription);
+      // }
+      // else{
+      //     const newSubscription = await registration.pushManager.subscribe({
+      //     userVisibleOnly:true,
+      //     aplicationServerKey: convertVapidKeys,
+      //   });
+      //   console.log(newSubscription);
+
+      //   if(newSubscription){
+      //     sendSubscription(newSubscription);
+      //   }
+      // }
+
+      //register firebase messaging with service worker
+      firebase.messaging().useServiceWorker(registration);
+
+      //on update
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
