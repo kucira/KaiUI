@@ -8,6 +8,7 @@ import ListView from '../../views/ListView/ListView';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import LoginController from '../controllers/LoginController';
+import ChatController from '../controllers/ChatController';
 import { askForPermissionToReceiveNotifications } from '../Utils/PushNotification';
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -16,6 +17,7 @@ import colors from '../../theme/colors.scss';
 
 function Login(props) {
   const [ login, setLogin ] = useGlobal('login');
+  const [ chatData, setChatData ] = useGlobal('chatData');
   const handleInputChange = useCallback(value  => {
     //const inputPhone = document.getElementById('phone')
   }, [login]);
@@ -25,32 +27,32 @@ function Login(props) {
     const inputPhone = document.getElementById('phone')
     if(login.country)
       inputPhone.value = login.country.phoneCode;
+      // inputPhone.value = login.country.phoneCode !== null ? login.phoneNumber : login.country.phoneCode; 
   }, [login]);
 
   useEffect(() => {
-    async function getToken() {
-      const token = await askForPermissionToReceiveNotifications();
-      console.log(token);
-      //save token
-      localStorage.setItem('ft', token);
-     const messaging = firebase.messaging();
+      async function getToken() {
+        const token = await askForPermissionToReceiveNotifications();
+        console.log(token);
+        //save token
+        localStorage.setItem('ft', token);
+       const messaging = firebase.messaging();
 
-      messaging.onMessage((payload) => {
-      
-        console.log('Message received. ', JSON.parse(payload.data.payload));
-        // ...
-      });
+        messaging.onMessage((_payload) => {
+          const { payload } = _payload.data;
+          ChatController.transformChatData(chatData, payload, setChatData);
+        });
 
-    // const currentToken = await messaging.getToken();
-    //    if (currentToken) {
-    //       console.log(currentToken);
-    //     } else {
-    //       // Show permission request.
-    //       console.log('No Instance ID token available. Request permission to generate one.');
-    //       // Show permission UI.
-    //   }
-    }
-  getToken();
+      // const currentToken = await messaging.getToken();
+      //    if (currentToken) {
+      //       console.log(currentToken);
+      //     } else {
+      //       // Show permission request.
+      //       console.log('No Instance ID token available. Request permission to generate one.');
+      //       // Show permission UI.
+      //   }
+      }
+      getToken();
 
   }, []);
 

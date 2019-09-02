@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
 import { setGlobal } from 'reactn';
+import addReactNDevTools from 'reactn-devtools';
 import App from './App';
 import AppTele from './KaiTelegram/App.jsx';
 import AppQuran from './MuslimCorner/App.jsx';
@@ -16,8 +17,15 @@ setGlobal({
   	authCode:'',
   	generateCode: false,
   },
-  chats: [],
+  chatData:{
+    chats: [],
+    message: [],
+    updateUser: [],
+    updateNewMessage: [],
+    updateNewChat: [],
+  }
 });
+addReactNDevTools();
 
 // for muslim corner
 // setGlobal({

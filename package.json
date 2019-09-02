@@ -15,7 +15,9 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "react-swipeable-views": "^0.13.3",
-    "reactn": "^2.2.1"
+    "reactn": "^2.2.1",
+    "reactn-devtools": "^1.0.1",
+    "redux": "^4.0.4"
   },
   "devDependencies": {
     "kdeploy": "kaiostech/kdeploy"
