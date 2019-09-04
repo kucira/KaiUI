@@ -2,10 +2,9 @@
 import Config from '../config/config';
 import axios from 'axios';
 
-const LoginController =  () => {
-	return {
+const LoginController  = {
 		getCode: async (_phoneNumber, token) => {
-			const result = await axios.post(`http://localhost:3009/getcode`, {			
+			const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/getcode`, {			
 					phone:_phoneNumber,
 					token,
 			});
@@ -15,36 +14,24 @@ const LoginController =  () => {
 			});
 		},
 		authCode: async (_code, _phoneNumber, token) => {
-			const result = await axios.post(`http://localhost:3009/auth`, {
+			const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth`, {
 					code:_code,
 					phone:_phoneNumber,
 					token,
 			});
-			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);
 			});
 		},
-		getChat: async (_chat_id, _phoneNumber) => {
-			const result = await axios.post(`http://localhost:3009/chat`, {
-					id:_chat_id,
+		getMe: async (_phoneNumber, token) => {
+			const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/me`, {
 					phone:_phoneNumber,
+					token,
 			});
-			console.log(result);
 			return new Promise(resolve => {
 				resolve(result);
 			});
 		},
-		getAllChat: async (_phoneNumber) => {
-			const result = await axios.post(`http://localhost:3009/all-chats`, {
-					phone:_phoneNumber,
-			});
-			console.log(result);
-			return new Promise(resolve => {
-				resolve(result);
-			});
-		},
-	}
 }
 
 export default LoginController;

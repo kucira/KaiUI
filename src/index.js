@@ -19,11 +19,11 @@ setGlobal({
   },
   chatData:{
     chats: [],
-    message: [],
+    messages: [],
     updateUser: [],
     updateNewMessage: [],
     updateNewChat: [],
-  }
+  },
 });
 addReactNDevTools();
 
@@ -44,4 +44,4 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
 initializeFirebase();
-serviceWorker.register();
+// serviceWorker.register();

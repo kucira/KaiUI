@@ -24,5 +24,13 @@
       "description": "Required to enter values"
     }
   },
-  "orientation": [ "portrait-primary" ]
+  "orientation": [ "portrait-primary" ],
+  "permissions": {
+    "push": {},
+    "desktop-notification": {}
+  },
+  "messages": [
+    { "push": "/" },
+    { "push-register": "/" }
+  ]
 }

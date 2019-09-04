@@ -12,12 +12,14 @@ import ChatController from '../controllers/ChatController';
 import { askForPermissionToReceiveNotifications } from '../Utils/PushNotification';
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
-import axios from 'axios';
+import DataServices from '../Utils/DataServices';
 import colors from '../../theme/colors.scss';
 
 function Login(props) {
   const [ login, setLogin ] = useGlobal('login');
   const [ chatData, setChatData ] = useGlobal('chatData');
+  const [ chats, setChats ] = useGlobal('chats');
+
   const handleInputChange = useCallback(value  => {
     //const inputPhone = document.getElementById('phone')
   }, [login]);
@@ -29,36 +31,6 @@ function Login(props) {
       inputPhone.value = login.country.phoneCode;
       // inputPhone.value = login.country.phoneCode !== null ? login.phoneNumber : login.country.phoneCode; 
   }, [login]);
-
-  useEffect(() => {
-      async function getToken() {
-        const token = await askForPermissionToReceiveNotifications();
-        console.log(token);
-        //save token
-        localStorage.setItem('ft', token);
-       const messaging = firebase.messaging();
-
-        messaging.onMessage((_payload) => {
-          const { payload } = _payload.data;
-          ChatController.transformChatData(chatData, payload, setChatData);
-        });
-
-      // const currentToken = await messaging.getToken();
-      //    if (currentToken) {
-      //       console.log(currentToken);
-      //     } else {
-      //       // Show permission request.
-      //       console.log('No Instance ID token available. Request permission to generate one.');
-      //       // Show permission UI.
-      //   }
-      }
-      getToken();
-
-  }, []);
-
-  const onUpdate = (e) => {
-    
-  }
 
   return (
     <div className="App">
@@ -98,11 +70,30 @@ function Login(props) {
                       centerCallback={async ()=>{
                         const inputPhone = document.getElementById('phone');
                         const phone = inputPhone.value;
-                        setLogin({...login, phoneNumber:inputPhone.value});
+                        
                         const token = localStorage.getItem('ft');
-                        const result = await LoginController().getCode(phone, token);
-                        console.log(result);
-                        history.push('/auth');
+                        localStorage.setItem('phone', phone);
+                        localStorage.setItem('isSyncChat', 0);
+
+                        setLogin({...login, phoneNumber:inputPhone.value});
+
+                        
+                        try {
+                          // statements
+                          const result = await LoginController.getCode(phone, token);
+                          if(!result.data.initClient){
+                            localStorage.setItem('isLogin', 1);
+                            history.replace('/chats');
+                          }
+                          else{
+                            localStorage.setItem('isLogin', 0);
+                            history.push('/auth');
+                          }
+                        } catch(e) {
+                          // statements
+                          alert(e);
+                        }
+
                       }}/>
           </ListView>
         </div>

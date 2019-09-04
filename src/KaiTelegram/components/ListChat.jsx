@@ -84,7 +84,7 @@ const ListChat = React.memo(
           }}/>
         </div>
         <div>
-          <div>{ data && moment(data.last_message.date).format('HH:mm')}</div>
+          <div>{ data && moment.unix(data.last_message.date).format('HH:mm')}</div>
           <div style={{
             borderRadius:'1rem',
             backgroundColor:'lightblue',

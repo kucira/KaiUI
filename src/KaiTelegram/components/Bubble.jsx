@@ -9,6 +9,8 @@ const prefixCls = 'kai-bubble';
 const Bubble = React.memo(
   props => {
     const {
+      content,
+      time,
       focusColor,
       forwardedRef,
       index,
@@ -64,9 +66,8 @@ const Bubble = React.memo(
           isSelf && (
              <li className="self">
                   <div className="messages">
-                    <p>That makes sense.</p>
-                    <p>It's a pretty small airport.</p>
-                    <time dateTime="2009-11-13T20:14">37 mins</time>
+                    <p>{content}</p>
+                    <time dateTime={time}>{time}</time>
                   </div>
                 </li>
           )
@@ -75,10 +76,8 @@ const Bubble = React.memo(
           !isSelf && (
               <li className="other">
                 <div className="messages">
-                  <p>that mongodb thing looks good, huh?</p>
-                  <p>
-                    tiny master db, and huge document store</p>
-                  <time dateTime="2009-11-13T20:00">Timothy • 51 min</time>
+                    <p>{content}</p>
+                    <time dateTime={time}>{time}</time>
                 </div>
               </li>
           )
@@ -104,6 +103,8 @@ Bubble.propTypes = {
   centerCallback: PropTypes.func,
   leftCallback: PropTypes.func,
   rightCallback: PropTypes.func,
+  content: PropTypes.string,
+  time: PropTypes.string,
 };
 
 Bubble.defaultProps = {

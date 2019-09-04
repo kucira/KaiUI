@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import Header from '../../components/Header/Header';
 import { SoftKeyProvider } from '../../components/SoftKey/SoftKeyProvider';
 import { withRouter } from 'react-router-dom';
+import DataServices from '../Utils/DataServices';
 import ListView from '../../views/ListView/ListView';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
@@ -32,7 +33,8 @@ function AuthCode(props) {
                 centerCallback={ async ()=>{
                   const authCode = document.getElementById('AuthCode').value;
                   const token = localStorage.getItem('ft');
-                  const result = await LoginController().authCode(authCode, login.phoneNumber, token);
+                  const result = await LoginController.authCode(authCode, login.phoneNumber, token);
+                  localStorage.setItem('isLogin', 1);
                   history.replace('/chats');
                 }}
                 leftCallback={()=>{
