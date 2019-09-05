@@ -19,16 +19,16 @@
   },
   "default_locale": "en-US",
   "subtitle": "Small demo app for KaiUI",
+  "type": "privileged",
   "permissions":{
     "input":{
       "description": "Required to enter values"
-    }
+    },
+    "push": {},
+    "desktop-notification": {},
+    "systemXHR": {}
   },
   "orientation": [ "portrait-primary" ],
-  "permissions": {
-    "push": {},
-    "desktop-notification": {}
-  },
   "messages": [
     { "push": "/" },
     { "push-register": "/" }

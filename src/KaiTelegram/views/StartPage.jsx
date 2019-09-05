@@ -44,7 +44,7 @@ function StartPage(props) {
   }
 
   useEffect(() => {
-      getToken();
+      // getToken();
       fetchData();
   }, []);
 

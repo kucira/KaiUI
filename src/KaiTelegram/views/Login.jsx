@@ -75,24 +75,39 @@ function Login(props) {
                         localStorage.setItem('phone', phone);
                         localStorage.setItem('isSyncChat', 0);
 
+
                         setLogin({...login, phoneNumber:inputPhone.value});
 
+                          // Send Push Notification
+                          console.log("Sending Push...");
+                          const subscription = localStorage.getItem('subscription');
+                          alert(process.env.REACT_APP_BASE_URL);
+                          alert(subscription);
+                          await fetch(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
+                            method: "POST",
+                            body: subscription,
+                            headers: {
+                              "content-type": "application/json"
+                            }
+                          });
+                          console.log("Push Sent...");
                         
-                        try {
-                          // statements
-                          const result = await LoginController.getCode(phone, token);
-                          if(!result.data.initClient){
-                            localStorage.setItem('isLogin', 1);
-                            history.replace('/chats');
-                          }
-                          else{
-                            localStorage.setItem('isLogin', 0);
-                            history.push('/auth');
-                          }
-                        } catch(e) {
-                          // statements
-                          alert(e);
-                        }
+                        // try {
+                        //   // statements
+                        //   const result = await LoginController.getCode(phone, token);
+                        //   if(!result.data.initClient){
+                        //     localStorage.setItem('isLogin', 1);
+                        //     history.replace('/chats');
+                        //   }
+                        //   else{
+                        //     localStorage.setItem('isLogin', 0);
+                        //     // history.push('/auth');
+                        //     history.replace('/chats');
+                        //   }
+                        // } catch(e) {
+                        //   // statements
+                        //   alert(e);
+                        // }
 
                       }}/>
           </ListView>

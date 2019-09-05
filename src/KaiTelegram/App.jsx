@@ -22,13 +22,13 @@ class App extends Component {
         	<SoftKeyProvider>
             <div className="App">
 		      	<Switch>
-		      	  <Route exact path="/" component={Page(StartPage)}></Route>
-              <Route path="/login" component={Page(Login)}></Route>
-              <Route path="/country" component={Page(Country)}></Route>
-              <Route path="/auth" component={Page(AuthCode)}></Route>
-              <Route path="/chats" component={Page(Chats)}></Route>
-              <Route path="/message/:id/:title" component={Page(Message)}></Route> 
-              <Route path="/newchat" component={Page(NewChat)}></Route> 
+		      	  <Route exact path="/" component={StartPage}></Route>
+              <Route path="/login" component={Login}></Route>
+              <Route path="/country" component={Country}></Route>
+              <Route path="/auth" component={AuthCode}></Route>
+              <Route path="/chats" component={Chats}></Route>
+              <Route path="/message/:id/:title" component={Message}></Route> 
+              <Route path="/newchat" component={NewChat}></Route> 
 		      	</Switch>
       		</div>
       		</SoftKeyProvider>

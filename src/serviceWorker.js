@@ -11,8 +11,21 @@
 // opt-in, read https://bit.ly/CRA-PWA
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
-import { convertDataURIToBinary } from './KaiTelegram/Utils/Common';
-import axios from 'axios';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -42,12 +55,6 @@ export function askPermission() {
   });
 }
 
-function sendSubscription(subscription) {
-  return axios.post(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
-    subscription: JSON.stringify(subscription),
-  });
-}
-
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -60,7 +67,7 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker-custom.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -87,31 +94,30 @@ function registerValidSW(swUrl, config) {
     .register(swUrl)
     .then(async registration => {
 
-      //registers web push
-      // console.log('registering push... ', registration);
-      // const convertVapidKeys = convertDataURIToBinary(String(process.env.REACT_APP_VAPID_PUBLIC_KEY));
-      // const permission = await askPermission();
-      // console.log(permission);
-
-      // const subscription = await registration.pushManager.getSubscription();
-      // console.log(subscription);
-      // if(subscription){
-      //   sendSubscription(subscription);
-      // }
-      // else{
-      //     const newSubscription = await registration.pushManager.subscribe({
-      //     userVisibleOnly:true,
-      //     aplicationServerKey: convertVapidKeys,
-      //   });
-      //   console.log(newSubscription);
-
-      //   if(newSubscription){
-      //     sendSubscription(newSubscription);
-      //   }
-      // }
-
+  console.log("Service Worker Registered...");
+  const isReady = await navigator.serviceWorker.ready;
+  alert(isReady);
+  if(isReady){
+    // Register Push
+      console.log("Registering Push...");
+      try
+      {
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_VAPID_PUBLIC_KEY)
+      });
+        alert(subscription);
+        localStorage.setItem('subscription', JSON.stringify(subscription));
+        console.log(subscription);
+        console.log("Push Registered...");
+      }
+      catch(error){
+        alert(error);
+      }
+  }
+  
       //register firebase messaging with service worker
-      firebase.messaging().useServiceWorker(registration);
+      // firebase.messaging().useServiceWorker(registration);
 
       //on update
       registration.onupdatefound = () => {

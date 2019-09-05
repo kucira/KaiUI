@@ -1,4 +1,5 @@
 {
+  "gcm_sender_id": "351767822373",
   "name": "KaiUI Demo",
   "version": "1.0.0",
   "description": "A demo app for KaiUI components",
@@ -22,7 +23,12 @@
   "permissions":{
     "input":{
       "description": "Required to enter values"
-    }
+    },
+    "push": {},
+    "desktop-notification": {
+      "description": "Required to display notification"
+    },
+    "systemXHR": {}
   },
   "orientation": [ "portrait-primary" ]
 }
