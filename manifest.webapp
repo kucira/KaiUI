@@ -1,25 +1,24 @@
 {
-  "name": "KaiUI Demo",
+  "name": "Busway",
   "version": "1.0.0",
-  "description": "A demo app for KaiUI components",
+  "description": "Busway App",
   "launch_path": "/index.html",
   "icons": {
-    "56": "/icons/rately56x56.png",
-    "112": "/icons/rately112x112.png"
+    "56": "/icon56.png",
+    "112": "/icon112.png"
   },
   "developer": {
-    "name": "Adrian Machado",
-    "url": "https://github.com/AdrianMachado"
+    "name": "Ikhlas Risandy",
+    "url": "https://github.com/kucira"
   },
   "locale": {
     "en-US":{
-      "name": "KaiUI Demo",
-      "description": "A demo app for KaiUI components"
+      "name": "Busway App",
+      "description": "Busway App"
     }
   },
   "default_locale": "en-US",
-  "subtitle": "Small demo app for KaiUI",
-  "type": "privileged",
+  "subtitle": "Busway App",
   "permissions":{
     "input":{
       "description": "Required to enter values"

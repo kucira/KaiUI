@@ -1,41 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
-import { setGlobal } from 'reactn';
-import addReactNDevTools from 'reactn-devtools';
-import App from './App';
-import AppTele from './KaiTelegram/App.jsx';
-import AppQuran from './MuslimCorner/App.jsx';
-import { initializeFirebase }  from './KaiTelegram/Utils/PushNotification';
+import AppBusway from './busway/App.jsx';
 import * as serviceWorker from './serviceWorker';
-
-// for telegram
-setGlobal({
-  login: {
-  	country:null,
-  	phoneNumber:'',
-  	authCode:'',
-  	generateCode: false,
-  },
-  chatData:{
-    chats: [],
-    messages: [],
-    updateUser: [],
-    updateNewMessage: [],
-    updateNewChat: [],
-  },
-});
-addReactNDevTools();
-
-// for muslim corner
-// setGlobal({
-//   surah:[],
-// });
 
 
 ReactDOM.render(
 	<Router>
-		<AppTele />
+		<AppBusway />
 	</Router>, 
 	document.getElementById('root'));
 

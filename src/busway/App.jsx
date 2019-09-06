@@ -3,10 +3,8 @@ import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router
 import { SoftKeyProvider } from '../components/SoftKey/SoftKeyProvider';
 import { SoftKeyConsumer } from '../components/SoftKey/withSoftKeyManager';
 import Home from './views/Home';
-import Quran from './views/Quran';
-import Surah from './views/Surah';
-import Video from './views/Video';
-import Page from './components/Page'
+import RouteBusway from './views/RouteBusway';
+import DetailRoute from './views/DetailRoute';
 import '../App.scss';
 // import './index.scss';
 
@@ -18,10 +16,9 @@ class App extends Component {
         	<SoftKeyProvider>
             <div className="App">
 		      	<Switch>
-		      	    <Route exact path="/" component={Page(Home)}></Route>
-		        	<Route path="/quran" component={Page(Quran)}></Route>
-              <Route path="/surah/:index" component={Page(Surah)}></Route>
-              <Route path="/video" component={Page(Video)}></Route>
+              <Route exact path="/" component={Home}></Route>
+              <Route path="/route/:id/:type" component={RouteBusway}></Route>
+              <Route path="/times/:id/:trackId/:stopId" component={DetailRoute}></Route>
 		      	</Switch>
       		</div>
       		</SoftKeyProvider>

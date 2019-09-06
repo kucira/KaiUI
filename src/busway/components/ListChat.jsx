@@ -26,6 +26,8 @@ const ListChat = React.memo(
       rightCallback,
       softKeyManager,
       data,
+      initial,
+      color,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
@@ -70,26 +72,15 @@ const ListChat = React.memo(
       >
         <div className={iconCls}>
           <span className={icon}>
-            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" className={avatarCls} />
+            <div className={avatarCls} style={{
+              backgroundColor:`#${color}`
+            }}>
+              {initial}
+            </div>
           </span>
         </div>
         <div className={lineCls}>
           <span className={primaryCls}>{primary}</span>
-          <label className={secondaryCls}>{secondary}</label>
-          <div style={{
-            position:'relative',
-            top:secondary ? '1rem' : '1.8rem',
-            width:'100vw',
-            borderBottom: '1px solid lightgray',
-          }}/>
-        </div>
-        <div>
-          <div>{ data && moment.unix(data.last_message.date).format('HH:mm')}</div>
-          <div style={{
-            borderRadius:'1rem',
-            backgroundColor:'lightblue',
-            textAlign:'center',
-          }}>{data && data.unread_count > 0 && data.unread_count}</div>
         </div>
       </div>
     );
@@ -98,6 +89,7 @@ const ListChat = React.memo(
 
 ListChat.propTypes = {
   primary: PropTypes.string.isRequired,
+  initial: PropTypes.string,
   secondary: PropTypes.string,
   focusColor: PropTypes.string,
   forwardedRef: PropTypes.oneOfType([
