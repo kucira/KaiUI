@@ -23,6 +23,7 @@ const ArrowListItem = React.memo(
       centerCallback,
       leftCallback,
       rightCallback,
+      backCallback,
     } = props;
 
     const [isFocused, setFocused] = useState(false);
@@ -51,7 +52,11 @@ const ArrowListItem = React.memo(
               },
               rightCallback: () => {
                   rightCallback();
+              },
+              backCallback: (e) => {
+                  backCallback(e);
               }
+              
           });
       }
     }
