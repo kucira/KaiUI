@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Busway App",
   "launch_path": "/index.html",
+  "type": "web",
   "icons": {
     "56": "/icon56.png",
     "112": "/icon112.png"
@@ -29,7 +30,7 @@
   },
   "orientation": [ "portrait-primary" ],
   "messages": [
-    { "push": "/" },
-    { "push-register": "/" }
+    { "push": "/index.html" },
+    { "push-register": "/index.html" }
   ]
 }
