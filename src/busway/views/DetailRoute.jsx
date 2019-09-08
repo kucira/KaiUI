@@ -26,7 +26,6 @@ function DetailRoute(props) {
   	setLoading(true);
     try{
       const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/get-time/${match.params.id}/${match.params.trackId}/${match.params.stopId}`);
-      console.log(data);
       setData(data);
       setLoading(false);
     }
@@ -77,9 +76,9 @@ function DetailRoute(props) {
                   display:'flex',
                   justifyContent:'center',
                   alignItems:'center',
-                  height:'100vh'
+                  height:'80vh'
                 }}>
-                  <Spinner size={120} spinnerColor={"#333"} spinnerWidth={2} visible={true} />
+                  <Spinner size={50} spinnerColor={"#333"} spinnerWidth={2} visible={true} />
                 </div>
             )
           }
