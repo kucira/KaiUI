@@ -5,6 +5,7 @@ import { SoftKeyProvider } from '../../components/SoftKey/SoftKeyProvider';
 import { SoftKeyConsumer } from '../../components/SoftKey/withSoftKeyManager';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import localforage from 'localforage';
 import Spinner from 'react-spinner-material';
 import ListView from '../../views/ListView/ListView';
 import ArrowListItem from '../../components/ArrowListItem/ArrowListItem';
@@ -25,33 +26,63 @@ function RouteBusway(props) {
   let countDown = 15;
   let id = 0;
 
-  const fetchData = async () => {
+  const getCacheData = async () => {
     try{
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/get-route/${match.params.id}/${match.params.type}`);
-      const track1 = data.tracks[0].stops;
-      const track2 = data.tracks[1].stops;
-      const newRoute1 = track1.map(t => {
-        const stopDetil = data.stops.find(s => s.id === t.stopId);
-        return {
-          ...stopDetil,
-          stopId:stopDetil.id,
-          id:data.tracks[0].id,
+      const buswayNumber = await localforage.getItem(`routes_${match.params.id}`);
+      return buswayNumber;
+    }
+    catch(error){
+      window.location.reload();
+    }
+  }
 
+  const mappingData = (data) => {      
+      if(data.tracks.length > 0) {
+        const track1 = data.tracks[0].stops;
+        const track2 = data.tracks[1]   ? data.tracks[1].stops : null;
+        const newRoute1 = track1.map(t => {
+          const stopDetil = data.stops.find(s => s.id === t.stopId);
+          return {
+            ...stopDetil,
+            stopId:stopDetil.id,
+            id:data.tracks[0].id,
+
+          }
+        });
+        setRoute(newRoute1);
+        setRoute1(newRoute1);
+
+        if(track2){
+          const newRoute2 = track2.map(t => {
+          const stopDetil = data.stops.find(s => s.id === t.stopId);
+            return {
+              ...stopDetil,
+              stopId:stopDetil.id,
+              id:data.tracks[1].id,
+            }
+          });
+          setRoute2(newRoute2);
         }
-      });
-      const newRoute2 = track2.map(t => {
-        const stopDetil = data.stops.find(s => s.id === t.stopId);
-        return {
-          ...stopDetil,
-          stopId:stopDetil.id,
-          id:data.tracks[1].id,
-        }
-      });
-      setRoute(newRoute1);
-      setRoute1(newRoute1);
-      setRoute2(newRoute2);
-      setData(data);
-      setLoading(false);
+        
+        setData(data);
+        setLoading(false);
+    }
+  }
+
+  const fetchData = async () => {
+    try {
+      const dataCache = await getCacheData();
+
+      if(dataCache) {
+        mappingData(dataCache);
+      }
+      else{
+        setLoading(true);
+      }
+      const { data } = await axios.get(`
+          ${process.env.REACT_APP_BASE_URL}/get-route/${match.params.id}/${match.params.type}`);
+      mappingData(data);
+      localforage.setItem(`routes_${match.params.id}`, data);
     }
     catch(error){
       alert(error);
@@ -69,8 +100,6 @@ function RouteBusway(props) {
     setRoute(swapRoute);
   }
 
-  console.log(data.tracks)
-
   const renderList = () => {
     return (
       <ListView>
@@ -82,7 +111,7 @@ function RouteBusway(props) {
               focusColor={colors.cyan}
               centerText='Select'
               leftText='Back'
-              rightText='Swap'
+              rightText={route2.length > 0 ? 'swap' : ''}
               leftCallback={() => {
                 history.goBack();
               }}
@@ -91,6 +120,10 @@ function RouteBusway(props) {
               }}
               rightCallback={()=> {
                 swapRoute();
+              }}
+              backCallback={(e)=> {
+                e.preventDefault();
+                history.goBack();
               }}
             />))
         }
@@ -101,7 +134,6 @@ function RouteBusway(props) {
   const renderHeaderTitle = ()=> {
     let title = '';
     if(data.tracks){
-      console.log(data.tracks.length > 0,'render');
       isSwap ? title = data.tracks[1].name : title = data.tracks[0].name;
     }
     return title;
@@ -118,9 +150,9 @@ function RouteBusway(props) {
                   display:'flex',
                   justifyContent:'center',
                   alignItems:'center',
-                  height:'100vh'
+                  height:'80vh'
                 }}>
-                  <Spinner size={120} spinnerColor={"#333"} spinnerWidth={2} visible={true} />
+                  <Spinner size={50} spinnerColor={"#333"} spinnerWidth={2} visible={true} />
                 </div>
             )
           }
