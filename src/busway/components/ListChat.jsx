@@ -24,6 +24,7 @@ const ListChat = React.memo(
       centerCallback,
       leftCallback,
       rightCallback,
+      backCallback,
       softKeyManager,
       data,
       initial,
@@ -57,6 +58,9 @@ const ListChat = React.memo(
               },
               rightCallback: () => {
                   rightCallback();
+              },
+              backCallback: (e) => {
+                  backCallback(e);
               }
           });
       }
