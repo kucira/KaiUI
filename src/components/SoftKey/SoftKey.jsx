@@ -45,6 +45,7 @@ const SoftKey = React.memo(
       leftCallback,
       rightCallback,
       centerCallback,
+      backCallback,
       leftText,
       rightText,
       centerText,
@@ -63,6 +64,10 @@ const SoftKey = React.memo(
           case 'Enter':
             // Action case press center key
             centerCallback();
+            break;
+          case 'Backspace':
+            // backspace case press center key
+            backCallback(e);
             break;
           default:
             break;
@@ -102,6 +107,7 @@ SoftKey.propTypes = {
   leftCallback: PropTypes.func,
   centerCallback: PropTypes.func,
   rightCallback: PropTypes.func,
+  backCallback: PropTypes.func,
 };
 
 SoftKey.defaultProps = {
@@ -112,6 +118,7 @@ SoftKey.defaultProps = {
   leftCallback: () => {},
   centerCallback: () => {},
   rightCallback: () => {},
+  backCallback: () => {},
 };
 
 export default SoftKey;

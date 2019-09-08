@@ -12,6 +12,7 @@ export class SoftKeyProvider extends React.PureComponent {
     leftCallback: () => {},
     centerCallback: () => {},
     rightCallback: () => {},
+    backCallback: () => {},
   };
 
   setLeftCallback = leftCallback => {
@@ -24,6 +25,10 @@ export class SoftKeyProvider extends React.PureComponent {
 
   setCenterCallback = centerCallback => {
     this.setState({ centerCallback });
+  };
+
+  setBackCallback = backCallback => {
+    this.setState({ backCallback });
   };
 
   setLeftText = leftText => {
@@ -52,8 +57,9 @@ export class SoftKeyProvider extends React.PureComponent {
     leftCallback = () => {},
     centerCallback = () => {},
     rightCallback = () => {},
+    backCallback = () => {},
   }) => {
-    this.setState({ leftCallback, centerCallback, rightCallback });
+    this.setState({ leftCallback, centerCallback, rightCallback, backCallback});
   };
 
   unregisterSoftKeys = () => {
@@ -61,6 +67,7 @@ export class SoftKeyProvider extends React.PureComponent {
       leftCallback: () => {},
       centerCallback: () => {},
       rightCallback: () => {},
+      backCallback: () => {},
       leftText: null,
       rightText: null,
       centerText: null,
@@ -73,6 +80,7 @@ export class SoftKeyProvider extends React.PureComponent {
       setLeftCallback: this.setLeftCallback,
       setRightCallback: this.setRightCallback,
       setCenterCallback: this.setCenterCallback,
+      setBackCallback: this.setBackCallback,
       setLeftText: this.setLeftText,
       setRightText: this.setRightText,
       setCenterText: this.setCenterText,
@@ -94,6 +102,7 @@ export class SoftKeyProvider extends React.PureComponent {
             leftCallback={this.state.leftCallback}
             centerCallback={this.state.centerCallback}
             rightCallback={this.state.rightCallback}
+            backCallback={this.state.backCallback}
           />
         </footer>
       </SoftKeyContext.Provider>
