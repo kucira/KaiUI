@@ -11,8 +11,8 @@ import Input from '../../components/Input/Input';
 import ListChat from '../components/ListChat';
 import ChatController from '../controllers/ChatController';
 import countryList from '../config/country-list';
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
+// import * as firebase from 'firebase/app';
+// import 'firebase/messaging';
 import mockChats from '../config/mock-chats';
 import colors from '../../theme/colors.scss';
 
@@ -43,7 +43,7 @@ function Chats(props) {
     
   }, [chatsList]);
 
-  const { history } = props;
+  const { history, socket } = props;
 
   const fetchData = async () => {
       const statusApp = await DataServices.getData('messagram_status_app');
@@ -96,39 +96,94 @@ function Chats(props) {
       }
   }
 
-  const registerOnMessage = async () => {
-    const messaging = firebase.messaging();
-
-    messaging.onMessage(async (_payload) => {
-      const { payload } = _payload.data;
-      const newChatList = await ChatController.transformChatData(payload);
-      console.log(newChatList);
-      if(newChatList && newChatList.length > 0)
-      {
-        setChats(newChatList);
-        setChatsList(newChatList);
-      }
-    });
+  const getChatData = async () => {
+    const statusApp = await DataServices.getData('messagram_status_app');
+    const dataApp = await DataServices.getData('messagram_data_app');
+    if(dataApp && dataApp.length > 0){
+      setChats({
+        ...chats,
+        chats: dataApp.updateNewChat,
+      });
+      setChatsList(dataApp.updateNewChat);
+    }
   }
-  
+
+  const saveChatData = async (data) => {
+      const dataApp = await DataServices.getData('messagram_data_app');
+      await DataServices.saveData('messagram_data_app', {
+        ...dataApp,
+        updateNewChat: data,
+      });
+      setChats({
+        ...chats,
+        chats: data,
+      });
+      setChatsList(data);
+  }
+
+  const registerOnMessage = async (data) => {
+   // const messaging = firebase.messaging();
+
+    // messaging.onMessage(async (_payload) => {
+    //   // const { payload } = _payload.data;
+
+    // });
+    const newChatList = await ChatController.transformChatData(data);
+    const dataApp = await DataServices.getData('messagram_data_app');
+    if(newChatList && newChatList.length > 0)
+    {
+      setChats(newChatList);
+      setChatsList(newChatList);
+      if (!"Notification" in window) {
+        console.log("This browser does not support notifications.");
+      }
+
+      // Let's check if the user is okay to get some notification
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        console.log(Notification.permission);
+        if(dataApp && dataApp.updateNewChat && data.message) {
+          const user = dataApp.updateNewChat.find(c => c.id === data.message.chat_id);
+          const img = '';
+          const text = translateTypeTextMessage(user);
+          const notification = new Notification(`${user.title}`, { body: text, icon: img });
+          notification.onclick = (event) => {
+            event.preventDefault(); // prevent the browser from focusing the Notification's tab
+            // history.push(`/message/${user.id}/${user.title}`);
+            window.open(`/message/${user.id}/${user.title}`);
+          }
+        }
+      }
+    }
+  }
+
   useEffect(() => {
     // setChats(mockChats);
     // setChatsList(mockChats);
-    fetchData();
-    registerOnMessage();
+    // fetchData();
+    // registerOnMessage();
+    const phone = localStorage.getItem('phone');
+    getChatData();
+
+    socket.emit('getAllChat', {phone});
+    socket.on('updateCallback', async (data) => {
+      registerOnMessage(data);
+    });
+    socket.on('responseAllChat', async (data) => {
+      saveChatData(data);
+    });
 
     return () => {
-
+      socket.removeEventListener('updateCallback');
+      socket.removeEventListener('responseAllChat');
     }
 
   }, [])
 
   const translateTypeTextMessage = (payload) => {
-    console.log(payload)
     let text = '';
     switch(payload.last_message.content['@type']){
       case 'messageCustomServiceAction' :
-        console.log('hello');
         text = String(payload.last_message.content.text.text);
       break;
       case 'messageAnimation' :

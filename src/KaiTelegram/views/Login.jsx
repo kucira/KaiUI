@@ -10,8 +10,8 @@ import Button from '../../components/Button/Button';
 import LoginController from '../controllers/LoginController';
 import ChatController from '../controllers/ChatController';
 import { askForPermissionToReceiveNotifications } from '../Utils/PushNotification';
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
+// import * as firebase from 'firebase/app';
+// import 'firebase/messaging';
 import DataServices from '../Utils/DataServices';
 import colors from '../../theme/colors.scss';
 
@@ -23,7 +23,34 @@ function Login(props) {
   const handleInputChange = useCallback(value  => {
     //const inputPhone = document.getElementById('phone')
   }, [login]);
-  const { history, location } = props;
+  const { history, location, socket } = props;
+
+  useEffect(() => {
+      socket.on('register-callback', (data) => {
+        console.log(`register callback ${JSON.stringify(data)}`);
+        setTimeout(()=>{
+          socket.emit('getMe', data);  
+        }, 500);
+        
+      });
+      socket.on('updateCallback', (data) => {
+        console.log(`updateCallback : ${JSON.stringify(data)}`);
+        if(data['@type'] === 'user' || data['@type'] === 'updateUser'){
+          history.replace('/chats');
+        }
+        else{
+          history.push('/auth');
+        }
+      });
+      socket.on('error', (data) => {
+        console.log(`error : ${JSON.stringify(data)}`);
+      });
+      return () => { 
+        socket.removeEventListener('register-callback') ;
+        socket.removeEventListener('updateCallback') ;
+        socket.removeEventListener('error') ;
+      } 
+  }, []);
 
   useEffect(() => {
     const inputPhone = document.getElementById('phone')
@@ -77,20 +104,22 @@ function Login(props) {
 
 
                         setLogin({...login, phoneNumber:inputPhone.value});
+                        socket.emit('request-code', {phone});
+
 
                           // Send Push Notification
-                          console.log("Sending Push...");
-                          const subscription = localStorage.getItem('subscription');
-                          alert(process.env.REACT_APP_BASE_URL);
-                          alert(subscription);
-                          await fetch(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
-                            method: "POST",
-                            body: subscription,
-                            headers: {
-                              "content-type": "application/json"
-                            }
-                          });
-                          console.log("Push Sent...");
+                          // console.log("Sending Push...");
+                          // const subscription = localStorage.getItem('subscription');
+                          // alert(process.env.REACT_APP_BASE_URL);
+                          // alert(subscription);
+                          // await fetch(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
+                          //   method: "POST",
+                          //   body: subscription,
+                          //   headers: {
+                          //     "content-type": "application/json"
+                          //   }
+                          // });
+                          // console.log("Push Sent...");
                         
                         // try {
                         //   // statements

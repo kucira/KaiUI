@@ -1,36 +1,71 @@
 {
-  "name": "KaiUI Demo",
+  "name": "Messagram",
   "version": "1.0.0",
-  "description": "A demo app for KaiUI components",
+  "description": "Messagram Telegram client App",
   "launch_path": "/index.html",
+  "type": "certified",
   "icons": {
-    "56": "/icons/rately56x56.png",
-    "112": "/icons/rately112x112.png"
+    "56": "/icon56.png",
+    "112": "/icon112.png"
   },
   "developer": {
-    "name": "Adrian Machado",
-    "url": "https://github.com/AdrianMachado"
+    "name": "Ikhlas Risandy",
+    "url": "https://github.com/kucira"
   },
   "locale": {
     "en-US":{
-      "name": "KaiUI Demo",
-      "description": "A demo app for KaiUI components"
+      "name": "Messagram",
+      "description": "Messagram App"
     }
   },
   "default_locale": "en-US",
-  "subtitle": "Small demo app for KaiUI",
-  "type": "privileged",
+  "subtitle": "Messagram",
+  "origin": "app://messagram.herokuapp.com",
   "permissions":{
     "input":{
       "description": "Required to enter values"
     },
     "push": {},
     "desktop-notification": {},
-    "systemXHR": {}
+    "systemXHR": {},
+    "alarms": {},
+    "themeable": {},
+    "browser": {},
+    "audio-channel-notification": {},
+    "contacts": {
+      "access": "readcreate"
+    },
+    "settings": {
+      "access": "readwrite"
+    },
+    "downloads": {},
+    "device-storage:sdcard": {
+      "access": "readcreate"
+    },
+    "tcp-socket": {},
+    "softkey": {},
+    "mobileconnection": {},
+    "engmode-extension": {},
+    "flip": {},
+    "power": {}
+  },
+  "activities": {
+    "open-fb": {
+      "href": "./index.html"
+    },
+    "share": {
+      "href": "/index.html",
+      "filters": {
+        "type": ["image/*"]
+      },
+      "disposition": "window",
+      "returnValue": true
+    }
   },
   "orientation": [ "portrait-primary" ],
   "messages": [
-    { "push": "/" },
-    { "push-register": "/" }
+    { "push": "/index.html" },
+    { "push-register": "/index.html" },
+    { "serviceworker-notification": "/index.html" }
   ]
 }

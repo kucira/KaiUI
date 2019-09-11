@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
+import io from 'socket.io-client';
 
 export const initializeFirebase = () => {
   // Your web app's Firebase configuration
@@ -28,4 +29,10 @@ export const askForPermissionToReceiveNotifications = async () => {
   } catch (error) {
     console.error(error);
   }
+}
+
+export const socketClient = (server) => {
+  const socket = io(server);
+  return socket;
+
 }

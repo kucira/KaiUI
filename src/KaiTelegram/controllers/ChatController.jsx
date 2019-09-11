@@ -5,8 +5,8 @@ const ChatController = {
 	transformChatData: async (_payload) => {
 		const statusApp = await DataServices.getData('messagram_status_app');
 		const dataApp = await DataServices.getData('messagram_data_app');
-		const parse = JSON.parse(_payload);
-
+		const parse = _payload;
+		console.log(parse);
 		switch(parse['@type']) {
             case 'updateUser' :
               console.log('save user if the phone number same with the payload'); //save user information
@@ -19,6 +19,7 @@ const ChatController = {
             case 'updateNewMessage' :
             	// update the chat data with the new payload
             	const newChatData = dataApp.updateNewChat.map(c => {
+            
             		return {
             			...c,
             			last_message : (c.id === parse.message.chat_id ) ? 
@@ -27,7 +28,9 @@ const ChatController = {
             			c.unread_count += 1 : c.unread_count,
             		}
             	});
+            	console.log(newChatData, 'transform chat data');
             	// save to database for the new chat
+            	dataApp.updateNewMessage.push(parse.message);
 				await DataServices.saveData('messagram_data_app', {
 					...dataApp,
 					updateNewChat: newChatData,

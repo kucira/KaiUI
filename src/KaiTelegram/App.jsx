@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router
 import { SoftKeyProvider } from '../components/SoftKey/SoftKeyProvider';
 import { SoftKeyConsumer } from '../components/SoftKey/withSoftKeyManager';
 import DataServices from './Utils/DataServices';
+import { socketClient } from './Utils/PushNotification';
 import Login from './views/Login';
 import Country from './views/Country';
 import AuthCode from './views/AuthCode';
@@ -14,8 +15,14 @@ import Page from './components/Page'
 import '../App.scss';
 // import './index.scss';
 
-
+const socket = socketClient(process.env.REACT_APP_BASE_URL);
 class App extends Component {
+    
+    componentDidMount(){
+      socket.on('connect', ()=>{
+        console.log(`connect`);
+      });
+    }
 
     render() {
         return (
@@ -23,11 +30,17 @@ class App extends Component {
             <div className="App">
 		      	<Switch>
 		      	  <Route exact path="/" component={StartPage}></Route>
-              <Route path="/login" component={Login}></Route>
+              <Route path="/login" render={() => {
+                return <Login socket={socket} />
+              }}></Route>
               <Route path="/country" component={Country}></Route>
               <Route path="/auth" component={AuthCode}></Route>
-              <Route path="/chats" component={Chats}></Route>
-              <Route path="/message/:id/:title" component={Message}></Route> 
+              <Route path="/chats" render={() => {
+                return <Chats socket={socket} />
+              }}></Route>
+              <Route path="/message/:id/:title" render={() => {
+                return <Message socket={socket} />
+              }}></Route> 
               <Route path="/newchat" component={NewChat}></Route> 
 		      	</Switch>
       		</div>

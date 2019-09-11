@@ -57,7 +57,7 @@ const Input = React.memo(
                         }
                     });
                 } else {
-                    inputRef.current.blur();
+                    //inputRef.current.blur();
                 }
             },
             [index, onFocusChange, centerCallback, rightCallback, 
@@ -67,7 +67,7 @@ const Input = React.memo(
 
 
         return (
-            <div
+    <div
         tabIndex="0"
         className={itemCls}
         style={{ backgroundColor: isFocused ? focusColor : colors.white }}
