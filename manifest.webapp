@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Busway App",
   "launch_path": "/index.html",
+  "type": "certified",
   "icons": {
     "56": "/icon56.png",
     "112": "/icon112.png"
@@ -19,17 +20,52 @@
   },
   "default_locale": "en-US",
   "subtitle": "Busway App",
+  "origin": "app://messagram.herokuapp.com",
   "permissions":{
     "input":{
       "description": "Required to enter values"
     },
     "push": {},
     "desktop-notification": {},
-    "systemXHR": {}
+    "systemXHR": {},
+    "alarms": {},
+    "themeable": {},
+    "browser": {},
+    "audio-channel-notification": {},
+    "contacts": {
+      "access": "readcreate"
+    },
+    "settings": {
+      "access": "readwrite"
+    },
+    "downloads": {},
+    "device-storage:sdcard": {
+      "access": "readcreate"
+    },
+    "tcp-socket": {},
+    "softkey": {},
+    "mobileconnection": {},
+    "engmode-extension": {},
+    "flip": {},
+    "power": {}
+  },
+  "activities": {
+    "open-fb": {
+      "href": "./index.html"
+    },
+    "share": {
+      "href": "/index.html",
+      "filters": {
+        "type": ["image/*"]
+      },
+      "disposition": "window",
+      "returnValue": true
+    }
   },
   "orientation": [ "portrait-primary" ],
   "messages": [
-    { "push": "/" },
-    { "push-register": "/" }
+    { "push": "/index.html" },
+    { "push-register": "/index.html" },
+    { "serviceworker-notification": "/index.html" }
   ]
 }
