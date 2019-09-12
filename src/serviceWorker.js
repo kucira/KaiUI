@@ -106,7 +106,6 @@ function registerValidSW(swUrl, config) {
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_VAPID_PUBLIC_KEY)
       });
-        alert(subscription);
         localStorage.setItem('subscription', JSON.stringify(subscription));
         console.log(subscription);
         console.log("Push Registered...");

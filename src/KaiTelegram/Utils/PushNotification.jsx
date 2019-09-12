@@ -2,7 +2,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import io from 'socket.io-client';
 
-export const initializeFirebase = () => {
+export const initializeFirebase = async () => {
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyBTVNpU2VyPLkv3G6wQG4t6qW0kkcPRGyE",
@@ -15,14 +15,14 @@ export const initializeFirebase = () => {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  console.log(firebase);
+  await askForPermissionToReceiveNotifications();
 }
 
 export const askForPermissionToReceiveNotifications = async () => {
   try {
   	
   	const messaging = firebase.messaging();
-    const res = await messaging.requestPermission();
+    // const res = await messaging.requestPermission();
     const token = await messaging.getToken();
     console.log('here is your firebase token :', token);
     return token;
