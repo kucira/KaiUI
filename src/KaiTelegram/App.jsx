@@ -15,14 +15,15 @@ import Page from './components/Page'
 import '../App.scss';
 // import './index.scss';
 
-const socket = socketClient(process.env.REACT_APP_BASE_URL);
+// const socket = socketClient(process.env.REACT_APP_BASE_URL);
+const socket = '';
 class App extends Component {
     
-    componentDidMount(){
-      socket.on('connect', ()=>{
-        console.log(`connect`);
-      });
-    }
+    // componentDidMount(){
+    //   socket.on('connect', ()=>{
+    //     console.log(`connect`);
+    //   });
+    // }
 
     render() {
         return (

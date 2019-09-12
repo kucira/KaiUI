@@ -9,8 +9,8 @@ import Input from '../../components/Input/Input';
 import Bubble from '../components/Bubble';
 import ChatController from '../controllers/ChatController';
 import DataServices from '../Utils/DataServices';
-// import * as firebase from 'firebase/app';
-// import 'firebase/messaging';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
 import countryList from '../config/country-list';
 import moment from 'moment';
 import mockChats from '../config/mock-chats';
@@ -23,6 +23,8 @@ function Messages(props) {
   const [isOptions, setIsOptions] = useState(false);
   const [ login, setLogin ] = useGlobal('login');
   const [ chatData, setChatData ] = useGlobal('chatData');
+
+  let firebaseListener = null;
   let id;
   let countDown = 15;
   const handleInputChange = useCallback(value  => {
@@ -30,6 +32,16 @@ function Messages(props) {
   }, [messageList]);
 
   const { history, match, socket } = props;
+
+  const fetchData = async () => {
+      const token = localStorage.getItem('ft');
+      const phone = localStorage.getItem('phone');
+
+      getMessageData();
+      
+      const result = await ChatController.getAllMessages(match.params.id, phone, token);
+      saveMessageData(result.data)
+  }
 
   const registerOnMessage = async (payload) => { 
 
@@ -42,12 +54,14 @@ function Messages(props) {
           const obj = {
             ...m.last_message
           }
-          dataApp.updateNewMessage.push(obj);
+          if(dataApp.updateNewMessage)
+            dataApp.updateNewMessage.push(obj);
           return {
             ...m.last_message
           }
         });
-        setMessageList(dataApp.updateNewMessage);
+        if(dataApp.updateNewMessage)
+          setMessageList(dataApp.updateNewMessage);
       }
   }
 
@@ -67,7 +81,7 @@ function Messages(props) {
   const saveMessageData = async (data) => {
       const messSort = data.messages.sort((a, b) => a.date -b.date);
       const dataApp = await DataServices.getData('messagram_data_app');
-      await DataServices.saveData('messagram_data_app', {
+      DataServices.saveData('messagram_data_app', {
         ...dataApp,
         updateNewMessage: messSort,
       });
@@ -79,29 +93,38 @@ function Messages(props) {
   }
 
   const sendMessage = async (data) => {
-    socket.emit('sendMessage', data);
+    // socket.emit('sendMessage', data);
+    const ft = localStorage.getItem('ft');
+    const result = ChatController.sendMessage(data.chatId, data.phone, ft, data.message);
   }
   
   useEffect(() => {
-    const phone = localStorage.getItem('phone');
+    // const phone = localStorage.getItem('phone');
+    // socket.emit('getHistoryChat', {phone, chatId:match.params.id});
+    const messaging = firebase.messaging();
 
-    socket.emit('getHistoryChat', {phone, chatId:match.params.id});
-    getMessageData();
+    fetchData();
 
-    socket.on('updateCallback', (data) => {
-      registerOnMessage(data);
+    firebaseListener = messaging.onMessage(async (_payload) => {
+      const { payload } = _payload.data;
+      registerOnMessage(payload);
     });
-    socket.on('responseHistoryChat', (data) => {
-      saveMessageData(data);
-    });
-    socket.on('error', (data) => {
-      console.log(data);
-    });
+
+    // socket.on('updateCallback', (data) => {
+    //   registerOnMessage(data);
+    // });
+    // socket.on('responseHistoryChat', (data) => {
+    //   saveMessageData(data);
+    // });
+    // socket.on('error', (data) => {
+    //   console.log(data);
+    // });
 
     return () => {
-      socket.removeEventListener('updateCallback');
-      socket.removeEventListener('responseAllChat');
-      socket.removeEventListener('error');
+      firebaseListener();
+      // socket.removeEventListener('updateCallback');
+      // socket.removeEventListener('responseAllChat');
+      // socket.removeEventListener('error');
     }
 
   }, []);

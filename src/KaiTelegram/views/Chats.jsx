@@ -11,8 +11,8 @@ import Input from '../../components/Input/Input';
 import ListChat from '../components/ListChat';
 import ChatController from '../controllers/ChatController';
 import countryList from '../config/country-list';
-// import * as firebase from 'firebase/app';
-// import 'firebase/messaging';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
 import mockChats from '../config/mock-chats';
 import colors from '../../theme/colors.scss';
 
@@ -22,9 +22,12 @@ function Chats(props) {
   const [ login, setLogin ] = useGlobal('login');
   const [ chatData, setChatData ] = useGlobal('chatData');
   const [ chats, setChats ] = useGlobal('chats');
+
+  let firebaseListener = null;
   let id;
   let countDown = 15;
-  const handleInputChange = useCallback(value  => {
+  const handleInputChange = useCallback( async (value)  => {
+    const dataApp = await DataServices.getData('messagram_data_app');
     countDown = 15;
     if(!id){
       id = setInterval(() => {
@@ -35,7 +38,7 @@ function Chats(props) {
           clearInterval(id);
           id = null;
           const input = document.getElementById('SearchChatInput');
-          const chatFilter = chats.filter(c => c.title.toLowerCase().includes(input.value.toLowerCase()));
+          const chatFilter = dataApp.updateNewChat.filter(c => c.title.toLowerCase().includes(input.value.toLowerCase()));
           setChatsList(chatFilter);
         }
       }, 100);
@@ -46,60 +49,19 @@ function Chats(props) {
   const { history, socket } = props;
 
   const fetchData = async () => {
-      const statusApp = await DataServices.getData('messagram_status_app');
-      const dataApp = await DataServices.getData('messagram_data_app');
       const token = localStorage.getItem('ft');
       const phone = localStorage.getItem('phone');
       const isSyncChat = localStorage.getItem('isSyncChat');
 
-      if(dataApp){
-        const _chats = dataApp.updateNewChat;
-        
-        setChats(_chats);
-        setChatsList(_chats);
-
-        if(isSyncChat === '0') {
-          console.log(isSyncChat, 'masuk');
-          const result = await ChatController.getAllChat(phone, token);
-          await DataServices.saveData('messagram_data_app', {
-            ...dataApp,
-            updateNewChat: result.data,
-          });
-          await DataServices.saveData('messagram_status_app', {
-            isSyncChat:true,
-          });
-          localStorage.setItem('isSyncChat', 1);
-
-          setChats({
-            ...chats,
-            chats: result.data,
-          });
-          setChatsList(result.data);
-        }
-      }
-      else{
-          const result = await ChatController.getAllChat(phone, token);
-          await DataServices.saveData('messagram_data_app', {
-            ...dataApp,
-            updateNewChat: result.data,
-          });
-          await DataServices.saveData('messagram_status_app', {
-            isSyncChat:true,
-          });
-          localStorage.setItem('isSyncChat', 1);
-
-          setChats({
-            ...chats,
-            chats: result.data,
-          });
-          setChatsList(result.data);
-      }
+      getChatData();
+      
+      const result = await ChatController.getAllChat(phone, token);
+      saveChatData(result.data);
   }
 
   const getChatData = async () => {
-    const statusApp = await DataServices.getData('messagram_status_app');
     const dataApp = await DataServices.getData('messagram_data_app');
-    if(dataApp && dataApp.length > 0){
+    if(dataApp && dataApp.updateNewChat && dataApp.updateNewChat.length > 0){
       setChats({
         ...chats,
         chats: dataApp.updateNewChat,
@@ -110,7 +72,7 @@ function Chats(props) {
 
   const saveChatData = async (data) => {
       const dataApp = await DataServices.getData('messagram_data_app');
-      await DataServices.saveData('messagram_data_app', {
+      DataServices.saveData('messagram_data_app', {
         ...dataApp,
         updateNewChat: data,
       });
@@ -122,60 +84,41 @@ function Chats(props) {
   }
 
   const registerOnMessage = async (data) => {
-   // const messaging = firebase.messaging();
-
-    // messaging.onMessage(async (_payload) => {
-    //   // const { payload } = _payload.data;
-
-    // });
     const newChatList = await ChatController.transformChatData(data);
-    const dataApp = await DataServices.getData('messagram_data_app');
+    console.log(newChatList);
+    // const dataApp = await DataServices.getData('messagram_data_app');
     if(newChatList && newChatList.length > 0)
     {
       setChats(newChatList);
       setChatsList(newChatList);
-      if (!"Notification" in window) {
-        console.log("This browser does not support notifications.");
-      }
-
-      // Let's check if the user is okay to get some notification
-      else if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        console.log(Notification.permission);
-        if(dataApp && dataApp.updateNewChat && data.message) {
-          const user = dataApp.updateNewChat.find(c => c.id === data.message.chat_id);
-          const img = '';
-          const text = translateTypeTextMessage(user);
-          const notification = new Notification(`${user.title}`, { body: text, icon: img });
-          notification.onclick = (event) => {
-            event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            // history.push(`/message/${user.id}/${user.title}`);
-            window.open(`/message/${user.id}/${user.title}`);
-          }
-        }
-      }
     }
   }
 
   useEffect(() => {
     // setChats(mockChats);
     // setChatsList(mockChats);
-    // fetchData();
-    // registerOnMessage();
-    const phone = localStorage.getItem('phone');
-    getChatData();
+    const messaging = firebase.messaging();
 
-    socket.emit('getAllChat', {phone});
-    socket.on('updateCallback', async (data) => {
-      registerOnMessage(data);
+    fetchData();
+
+    firebaseListener = messaging.onMessage(async (_payload) => {
+      const { payload } = _payload.data;
+      registerOnMessage(payload);
     });
-    socket.on('responseAllChat', async (data) => {
-      saveChatData(data);
-    });
+
+    // const phone = localStorage.getItem('phone');
+    // socket.emit('getAllChat', {phone});
+    // socket.on('updateCallback', async (data) => {
+    //   registerOnMessage(data);
+    // });
+    // socket.on('responseAllChat', async (data) => {
+    //   saveChatData(data);
+    // });
 
     return () => {
-      socket.removeEventListener('updateCallback');
-      socket.removeEventListener('responseAllChat');
+      firebaseListener();
+      // socket.removeEventListener('updateCallback');
+      // socket.removeEventListener('responseAllChat');
     }
 
   }, [])

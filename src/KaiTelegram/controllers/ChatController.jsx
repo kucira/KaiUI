@@ -5,8 +5,7 @@ const ChatController = {
 	transformChatData: async (_payload) => {
 		const statusApp = await DataServices.getData('messagram_status_app');
 		const dataApp = await DataServices.getData('messagram_data_app');
-		const parse = _payload;
-		console.log(parse);
+		const parse = JSON.parse(_payload);
 		switch(parse['@type']) {
             case 'updateUser' :
               console.log('save user if the phone number same with the payload'); //save user information
@@ -30,8 +29,10 @@ const ChatController = {
             	});
             	console.log(newChatData, 'transform chat data');
             	// save to database for the new chat
-            	dataApp.updateNewMessage.push(parse.message);
-				await DataServices.saveData('messagram_data_app', {
+            	if(dataApp.updateNewMessage)
+            		dataApp.updateNewMessage.push(parse.message);
+
+				DataServices.saveData('messagram_data_app', {
 					...dataApp,
 					updateNewChat: newChatData,
 				});
@@ -101,6 +102,18 @@ const ChatController = {
 				chat_id,
 				phone,
 				token,
+		});
+		console.log(result);
+		return new Promise(resolve => {
+			resolve(result);
+		});
+	},
+	sendMessage: async (chat_id, phone, token, message) => {
+		const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/send-message`, {
+				chat_id,
+				phone,
+				token,
+				message,
 		});
 		console.log(result);
 		return new Promise(resolve => {

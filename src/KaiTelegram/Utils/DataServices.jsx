@@ -10,14 +10,8 @@ const DataServices = {
 			return e;
 		}
 	},
-	saveData: async (keyName, payload) => {
-		try {
-			const data = await localforage.setItem(keyName, payload);
-			return data;
-		} catch(e) {
-			console.log(e);
-			return e;
-		}
+	saveData:  (keyName, payload) => {
+			localforage.setItem(keyName, payload).catch(e => console.log(e));
 	},
 	deleteData: async (keyName) => {
 		try {

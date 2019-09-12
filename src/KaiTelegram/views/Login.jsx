@@ -26,29 +26,29 @@ function Login(props) {
   const { history, location, socket } = props;
 
   useEffect(() => {
-      socket.on('register-callback', (data) => {
-        console.log(`register callback ${JSON.stringify(data)}`);
-        setTimeout(()=>{
-          socket.emit('getMe', data);  
-        }, 500);
+      // socket.on('register-callback', (data) => {
+      //   console.log(`register callback ${JSON.stringify(data)}`);
+      //   setTimeout(()=>{
+      //     socket.emit('getMe', data);  
+      //   }, 500);
         
-      });
-      socket.on('updateCallback', (data) => {
-        console.log(`updateCallback : ${JSON.stringify(data)}`);
-        if(data['@type'] === 'user' || data['@type'] === 'updateUser'){
-          history.replace('/chats');
-        }
-        else{
-          history.push('/auth');
-        }
-      });
-      socket.on('error', (data) => {
-        console.log(`error : ${JSON.stringify(data)}`);
-      });
+      // });
+      // socket.on('updateCallback', (data) => {
+      //   console.log(`updateCallback : ${JSON.stringify(data)}`);
+      //   if(data['@type'] === 'user' || data['@type'] === 'updateUser'){
+      //     history.replace('/chats');
+      //   }
+      //   else{
+      //     history.push('/auth');
+      //   }
+      // });
+      // socket.on('error', (data) => {
+      //   console.log(`error : ${JSON.stringify(data)}`);
+      // });
       return () => { 
-        socket.removeEventListener('register-callback') ;
-        socket.removeEventListener('updateCallback') ;
-        socket.removeEventListener('error') ;
+        // socket.removeEventListener('register-callback') ;
+        // socket.removeEventListener('updateCallback') ;
+        // socket.removeEventListener('error') ;
       } 
   }, []);
 
@@ -104,7 +104,7 @@ function Login(props) {
 
 
                         setLogin({...login, phoneNumber:inputPhone.value});
-                        socket.emit('request-code', {phone});
+                        // socket.emit('request-code', {phone});
 
 
                           // Send Push Notification
@@ -121,22 +121,21 @@ function Login(props) {
                           // });
                           // console.log("Push Sent...");
                         
-                        // try {
-                        //   // statements
-                        //   const result = await LoginController.getCode(phone, token);
-                        //   if(!result.data.initClient){
-                        //     localStorage.setItem('isLogin', 1);
-                        //     history.replace('/chats');
-                        //   }
-                        //   else{
-                        //     localStorage.setItem('isLogin', 0);
-                        //     // history.push('/auth');
-                        //     history.replace('/chats');
-                        //   }
-                        // } catch(e) {
-                        //   // statements
-                        //   alert(e);
-                        // }
+                        try {
+                          // statements
+                          const result = await LoginController.getCode(phone, token);
+                          if(!result.data.initClient){
+                            localStorage.setItem('isLogin', 1);
+                            history.replace('/chats');
+                          }
+                          else{
+                            localStorage.setItem('isLogin', 0);
+                            history.push('/auth');
+                          }
+                        } catch(e) {
+                          // statements
+                          alert(e);
+                        }
 
                       }}/>
           </ListView>

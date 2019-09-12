@@ -45,8 +45,8 @@ function StartPage(props) {
 
   useEffect(() => {
       // getToken();
-      // fetchData();
-      history.replace('/login');
+      fetchData();
+      // history.replace('/login');
   }, []);
 
 
