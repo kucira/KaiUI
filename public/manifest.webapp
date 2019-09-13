@@ -5,10 +5,8 @@
   "subtitle": "Telegram Client",
   "description": "Telegram Client",
   "version": "0.1",
-  "theme": "#2cab98",
   "launch_path": "/index.html",
   "type": "certified",
-  "cursor": false,
   "priority": "high",
   "developer": {
     "name": "Ikhlas Risandy",

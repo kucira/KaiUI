@@ -2,7 +2,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 import io from 'socket.io-client';
 
-export const initializeFirebase = async () => {
+export const initializeFirebase = () => {
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyBTVNpU2VyPLkv3G6wQG4t6qW0kkcPRGyE",

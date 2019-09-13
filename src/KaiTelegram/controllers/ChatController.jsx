@@ -30,8 +30,8 @@ const ChatController = {
 					});
 					console.log(newChatData, 'transform chat data');
 					// save to database for the new chat
-					if(dataApp.updateNewMessage)
-						dataApp.updateNewMessage.push(parse.message);
+					// if(dataApp.updateNewMessage)
+					// 	dataApp.updateNewMessage.push(parse.message);
 
 					DataServices.saveData('messagram_data_app', {
 						...dataApp,

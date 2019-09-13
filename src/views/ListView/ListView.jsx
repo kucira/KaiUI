@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
+// import { FixedSizeList as List } from "react-window";
+// import AutoSizer from "react-virtualized-auto-sizer";
 import './ListView.scss';
 
 const prefixCls = 'kai-list-view';

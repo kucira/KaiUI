@@ -12,6 +12,8 @@ import Message from './views/Message';
 import NewChat from './views/NewChat';
 import StartPage from './views/StartPage';
 import Page from './components/Page'
+import { initializeFirebase }  from './Utils/PushNotification';
+import * as serviceWorker from '../serviceWorker';
 import '../App.scss';
 // import './index.scss';
 
@@ -19,19 +21,18 @@ import '../App.scss';
 const socket = '';
 class App extends Component {
     
-    // componentDidMount(){
-    //   socket.on('connect', ()=>{
-    //     console.log(`connect`);
-    //   });
-    // }
+    componentDidMount(){
+      initializeFirebase();
+      serviceWorker.register();
+    }
 
     render() {
         return (
         	<SoftKeyProvider>
             <div className="App">
 		      	<Switch>
-		      	  <Route exact path="/" component={StartPage}></Route>
-              <Route path="/login" render={() => {
+		      	  { /* <Route exact path="/" component={StartPage}></Route> */ }
+              <Route exact path="/" render={() => {
                 return <Login socket={socket} />
               }}></Route>
               <Route path="/country" component={Country}></Route>

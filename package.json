@@ -32,7 +32,7 @@
     "eject": "react-scripts eject",
     "app:install": "kdeploy build install",
     "app:uninstall": "kdeploy build uninstall",
-    "app:update": "npm run build --scripts-prepend-node-path && kdeploy build update",
+    "app:update": "npm run build --scripts-prepend-node-path && kdeploy build uninstall && kdeploy build update",
     "app:start": "kdeploy build start",
     "app:stop": "kdeploy build stop"
   },

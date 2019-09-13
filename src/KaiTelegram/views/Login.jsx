@@ -15,6 +15,7 @@ import 'firebase/messaging';
 import DataServices from '../Utils/DataServices';
 import colors from '../../theme/colors.scss';
 
+
 function Login(props) {
   const [ login, setLogin ] = useGlobal('login');
   const [ chatData, setChatData ] = useGlobal('chatData');
@@ -33,15 +34,16 @@ function Login(props) {
     firebaseListener = messaging.onMessage(async (_payload) => {
       const { payload } = _payload.data;
       const parse = JSON.parse(payload);
-      console.log(parse['@type']);
-      if(parse['@type'] === 'error'){
+      const type = String(parse['@type']) || '';
+      console.log(type.includes('updateUser'));
+      if(type.includes('error')) {
         setLoading(false);
         alert(parse.message);
       }
-      else if(parse['@type'].includes('user')){
+      else if(type.includes('updateUser')){
         history.replace('/chats');
       }
-      else{
+      else {
         history.push('/auth');
       }
     });
@@ -123,8 +125,9 @@ function Login(props) {
                           try {
                             // statements
                             const result = await LoginController.getCode(phone, token);
+                            console.log(result);
                             setLoading(true);
-                            if(result) {
+                            if(!result.data.initClient) {
                               const { data } = await LoginController.getMe(phone, token); //check the user info
                               
                               if(data.message) {

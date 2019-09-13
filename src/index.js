@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
 import { setGlobal } from 'reactn';
-import addReactNDevTools from 'reactn-devtools';
-import App from './App';
+// import addReactNDevTools from 'reactn-devtools';
+// import App from './App';
 import AppTele from './KaiTelegram/App.jsx';
-import AppQuran from './MuslimCorner/App.jsx';
+// import AppQuran from './MuslimCorner/App.jsx';
 import { initializeFirebase }  from './KaiTelegram/Utils/PushNotification';
 import * as serviceWorker from './serviceWorker';
 
@@ -43,5 +43,3 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
-initializeFirebase();
-serviceWorker.register();

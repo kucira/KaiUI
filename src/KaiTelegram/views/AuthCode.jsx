@@ -26,13 +26,13 @@ function AuthCode(props) {
     firebaseListener = messaging.onMessage(async (_payload) => {
       const { payload } = _payload.data;
       const parse = JSON.parse(payload);
-      console.log(parse['@type']);
-      if(parse['@type'] === 'error'){
+      const type = String(parse['@type']) || '';
+      if(type.includes('error')) {
         setLoading(false);
         alert(parse.message);
       }
-      else if(parse.includes('tglib.input.AuthorizationCode')){
-        history.push('/auth');
+      else if(type.includes('updateUser')){
+        history.replace('/chats');
       }
       else{
         localStorage.setItem('isLogin', 1);

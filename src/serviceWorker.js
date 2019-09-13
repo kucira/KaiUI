@@ -57,7 +57,7 @@ export function askPermission() {
 
 export function register(config) {
 
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if (process.env.NODE_ENV !== 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
@@ -102,22 +102,21 @@ function registerValidSW(swUrl, config) {
   alert(isReady);
   if(isReady){
     // Register Push
-      console.log("Registering Push...");
-      try
-      {
-        const subscription = await registration.pushManager.subscribe();
-        //const newEndpoint = subscription.endpoint;
-        alert(subscription);
-        console.log(subscription);
-        localStorage.setItem('subscription', JSON.stringify(subscription));
-        console.log(subscription);
-        console.log("Push Registered...");
-      }
-      catch(error){
-        alert(error);
-      }
-  }
-  
+      // console.log("Registering Push...");
+      // try
+      // {
+      //   const subscription = await registration.pushManager.subscribe();
+      //   //const newEndpoint = subscription.endpoint;
+      //   alert(subscription);
+      //   console.log(subscription);
+      //   localStorage.setItem('subscription', JSON.stringify(subscription));
+      //   console.log(subscription);
+      //   console.log("Push Registered...");
+      // }
+      // catch(error){
+      //   alert(error);
+      // }
+
       // register firebase messaging with service worker
       const messaging = firebase.messaging();
       messaging.useServiceWorker(registration);
@@ -132,6 +131,10 @@ function registerValidSW(swUrl, config) {
         } catch (error) {
           console.log(error);
         }
+      
+  }
+  
+     
 
       //on update
       registration.onupdatefound = () => {

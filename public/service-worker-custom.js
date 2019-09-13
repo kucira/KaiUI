@@ -169,7 +169,7 @@ console.log('[firebase-messaging-sw.js] Received background message ', payload);
 	  const notificationTitle = `${forNotificationData.title}`;
 	  const notificationOptions = {
 	    body: `${forNotificationData.content}`,
-	    icon: '/',
+	    icon: 'https://cdn.iconscout.com/icon/free/png-256/telegram-9-840221.png',
 	    tag: `${forNotificationData.id}`,
 	    renotify: true,
 	    data:{

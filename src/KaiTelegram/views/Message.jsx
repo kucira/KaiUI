@@ -47,21 +47,13 @@ function Messages(props) {
 
       const dataApp = await DataServices.getData('messagram_data_app');
       const newChatList = await ChatController.transformChatData(payload);
-      if(newChatList){
-        console.log(newChatList, 'newChatList');
-        const findLastMessageUpdate = newChatList.filter(c => c.id === Number(match.params.id));
-        const transform = findLastMessageUpdate.map(m => {
-          const obj = {
-            ...m.last_message
-          }
-          if(dataApp.updateNewMessage)
-            dataApp.updateNewMessage.push(obj);
-          return {
-            ...m.last_message
-          }
-        });
-        if(dataApp.updateNewMessage)
-          setMessageList(dataApp.updateNewMessage);
+      const parse = JSON.parse(payload);
+      console.log(parse)
+      console.log(Number(match.params.id));
+      if(parse.message.chat_id === Number(match.params.id)) {
+        dataApp.updateNewMessage.push(parse.message);
+        setMessageList(dataApp.updateNewMessage);
+        DataServices.saveData('messagram_data_app', dataApp);
       }
   }
 
