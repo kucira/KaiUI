@@ -10,8 +10,8 @@ import Button from '../../components/Button/Button';
 import LoginController from '../controllers/LoginController';
 import ChatController from '../controllers/ChatController';
 import { askForPermissionToReceiveNotifications } from '../Utils/PushNotification';
-// import * as firebase from 'firebase/app';
-// import 'firebase/messaging';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
 import DataServices from '../Utils/DataServices';
 import colors from '../../theme/colors.scss';
 
@@ -19,38 +19,36 @@ function Login(props) {
   const [ login, setLogin ] = useGlobal('login');
   const [ chatData, setChatData ] = useGlobal('chatData');
   const [ chats, setChats ] = useGlobal('chats');
+  const [ loading, setLoading ] = useState(false);
 
   const handleInputChange = useCallback(value  => {
     //const inputPhone = document.getElementById('phone')
   }, [login]);
   const { history, location, socket } = props;
 
+  let firebaseListener;
+
   useEffect(() => {
-      // socket.on('register-callback', (data) => {
-      //   console.log(`register callback ${JSON.stringify(data)}`);
-      //   setTimeout(()=>{
-      //     socket.emit('getMe', data);  
-      //   }, 500);
-        
-      // });
-      // socket.on('updateCallback', (data) => {
-      //   console.log(`updateCallback : ${JSON.stringify(data)}`);
-      //   if(data['@type'] === 'user' || data['@type'] === 'updateUser'){
-      //     history.replace('/chats');
-      //   }
-      //   else{
-      //     history.push('/auth');
-      //   }
-      // });
-      // socket.on('error', (data) => {
-      //   console.log(`error : ${JSON.stringify(data)}`);
-      // });
-      return () => { 
-        // socket.removeEventListener('register-callback') ;
-        // socket.removeEventListener('updateCallback') ;
-        // socket.removeEventListener('error') ;
-      } 
-  }, []);
+    const messaging = firebase.messaging();
+    firebaseListener = messaging.onMessage(async (_payload) => {
+      const { payload } = _payload.data;
+      const parse = JSON.parse(payload);
+      console.log(parse['@type']);
+      if(parse['@type'] === 'error'){
+        setLoading(false);
+        alert(parse.message);
+      }
+      else if(parse['@type'].includes('user')){
+        history.replace('/chats');
+      }
+      else{
+        history.push('/auth');
+      }
+    });
+    return () => {
+      firebaseListener();
+    }
+  }, [])
 
   useEffect(() => {
     const inputPhone = document.getElementById('phone')
@@ -92,13 +90,14 @@ function Login(props) {
               focusColor={colors.cyan}
               />
 
-              <Button text='Next'
+              <Button text={loading ? 'Loading' : 'Next'}
                       focusColor={colors.cyan}
                       centerCallback={async ()=>{
                         const inputPhone = document.getElementById('phone');
                         const phone = inputPhone.value;
                         
                         const token = localStorage.getItem('ft');
+                        console.log(token);
                         localStorage.setItem('phone', phone);
                         localStorage.setItem('isSyncChat', 0);
 
@@ -120,21 +119,32 @@ function Login(props) {
                           //   }
                           // });
                           // console.log("Push Sent...");
-                        
-                        try {
-                          // statements
-                          const result = await LoginController.getCode(phone, token);
-                          if(!result.data.initClient){
-                            localStorage.setItem('isLogin', 1);
-                            history.replace('/chats');
+                        if(!loading) {
+                          try {
+                            // statements
+                            const result = await LoginController.getCode(phone, token);
+                            setLoading(true);
+                            if(result) {
+                              const { data } = await LoginController.getMe(phone, token); //check the user info
+                              
+                              if(data.message) {
+                                const parse = JSON.parse(data.message);
+                                console.log(parse);
+                                if(parse['@type'] === 'error'){
+                                  alert(data.message);
+                                  setLoading(false)
+                                }
+                              }else{
+                                console.log(data);
+                                history.replace('/chats');
+                              }
+                            }
+                            
+                          } catch(e) {
+                            
+                            // statements
+                            alert(e);
                           }
-                          else{
-                            localStorage.setItem('isLogin', 0);
-                            history.push('/auth');
-                          }
-                        } catch(e) {
-                          // statements
-                          alert(e);
                         }
 
                       }}/>

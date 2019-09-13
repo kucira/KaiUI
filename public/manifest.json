@@ -1,7 +1,7 @@
 {
   "gcm_sender_id": "351767822373",
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Messagram",
+  "name": "Messagram",
   "icons": [
     {
       "src": "favicon.ico",

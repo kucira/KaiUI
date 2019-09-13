@@ -25,8 +25,21 @@ function StartPage(props) {
     const token = localStorage.getItem('ft');
     const phone = localStorage.getItem('phone');
     if(isLogin){
-      const result = await LoginController.getCode(phone, token);
-      history.replace('/chats')
+      try {
+        // statements
+        const result = await LoginController.getCode(phone, token);
+        if(result)
+          history.replace('/chats')
+        else
+          alert(result);
+      } catch(e) {
+        // statements
+        alert(e);
+        console.log(e);
+      }
+      
+
+      
     }
     else{
       // clear client telegram on server
@@ -45,8 +58,8 @@ function StartPage(props) {
 
   useEffect(() => {
       // getToken();
-      fetchData();
-      // history.replace('/login');
+      //fetchData();
+       history.replace('/login');
   }, []);
 
 

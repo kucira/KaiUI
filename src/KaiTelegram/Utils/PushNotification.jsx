@@ -15,14 +15,14 @@ export const initializeFirebase = async () => {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  await askForPermissionToReceiveNotifications();
+  // await askForPermissionToReceiveNotifications();
 }
 
 export const askForPermissionToReceiveNotifications = async () => {
   try {
   	
   	const messaging = firebase.messaging();
-    // const res = await messaging.requestPermission();
+    const res = await messaging.requestPermission();
     const token = await messaging.getToken();
     localStorage.setItem('ft', token);
     console.log('here is your firebase token :', token);

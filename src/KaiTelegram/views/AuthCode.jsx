@@ -8,12 +8,41 @@ import ListView from '../../views/ListView/ListView';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 import LoginController from '../controllers/LoginController';
+import * as firebase from 'firebase/app';
+import 'firebase/messaging';
 import colors from '../../theme/colors.scss';
 
 function AuthCode(props) {
   const [ login, setLogin ] = useGlobal('login');
   const [ chats, setChats ] = useGlobal('chats');
+  const [ loading, setLoading ] = useState(false);
   const { history, location } = props;
+
+
+  let firebaseListener;
+
+  useEffect(() => {
+    const messaging = firebase.messaging();
+    firebaseListener = messaging.onMessage(async (_payload) => {
+      const { payload } = _payload.data;
+      const parse = JSON.parse(payload);
+      console.log(parse['@type']);
+      if(parse['@type'] === 'error'){
+        setLoading(false);
+        alert(parse.message);
+      }
+      else if(parse.includes('tglib.input.AuthorizationCode')){
+        history.push('/auth');
+      }
+      else{
+        localStorage.setItem('isLogin', 1);
+        history.replace('/chats');
+      }
+    });
+    return () => {
+      firebaseListener();
+    }
+  }, [])
 
   return (
     <div className="App">
@@ -25,7 +54,7 @@ function AuthCode(props) {
                 id='AuthCode'
                 label='Code'
                 placeholder="Insert Code"
-                centerText='Sign in'
+                centerText={loading ? 'Loading' : 'Sign in'}
                 leftText='Back'
                 rightText=''
                 onInputChange={()=>{}}
@@ -33,9 +62,17 @@ function AuthCode(props) {
                 centerCallback={ async ()=>{
                   const authCode = document.getElementById('AuthCode').value;
                   const token = localStorage.getItem('ft');
-                  const result = await LoginController.authCode(authCode, login.phoneNumber, token);
-                  localStorage.setItem('isLogin', 1);
-                  history.replace('/chats');
+                  if(!loading){
+                    try {
+                      // statements
+                      setLoading(true);
+                      const result = await LoginController.authCode(authCode, login.phoneNumber, token);
+                    } catch(e) {
+                      // statements
+                      alert(e);
+                      console.log(e);
+                    }
+                  }
                 }}
                 leftCallback={()=>{
                   history.goBack();

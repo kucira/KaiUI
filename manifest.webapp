@@ -1,28 +1,20 @@
 {
   "gcm_sender_id": "351767822373",
   "name": "Messagram",
-  "version": "1.0.0",
-  "description": "Messagram Telegram client App",
+  "display": "Messagram",
+  "subtitle": "Telegram Client",
+  "description": "Telegram Client",
+  "version": "0.1",
+  "theme": "#2cab98",
   "launch_path": "/index.html",
   "type": "certified",
-  "icons": {
-    "56": "/icon56.png",
-    "112": "/icon112.png"
-  },
+  "cursor": false,
+  "priority": "high",
   "developer": {
     "name": "Ikhlas Risandy",
-    "url": "https://github.com/kucira"
+    "url": "http://github.com/kucira"
   },
-  "locale": {
-    "en-US":{
-      "name": "Messagram",
-      "description": "Messagram App"
-    }
-  },
-  "default_locale": "en-US",
-  "subtitle": "Messagram",
-  "origin": "app://messagram.herokuapp.com",
-  "permissions":{
+  "permissions": {
     "alarms": {
       "description": "Required for keeping the app always connected to server"
     },
@@ -98,23 +90,46 @@
       "description": "To discover phone characteristics and supported features"
     }
   },
-  "activities": {
-    "open-fb": {
-      "href": "./index.html"
-    },
-    "share": {
-      "href": "/index.html",
-      "filters": {
-        "type": ["image/*"]
-      },
-      "disposition": "window",
-      "returnValue": true
-    }
-  },
-  "orientation": [ "portrait-primary" ],
   "messages": [
     { "push": "/index.html" },
     { "push-register": "/index.html" },
     { "serviceworker-notification": "/index.html" }
-  ]
+  ],
+  "default_locale": "en-US",
+  "locales": {
+    "en-US": {
+      "name": "Messagram",
+      "subtitle": "Messagram"
+    }
+  },
+  "icons": {
+    "56": "/icons/whatsapp_56.png",
+    "84": "/icons/whatsapp_84.png"
+  },
+  "orientation": "default",
+  "activities": {
+    "share": {
+      "href": "index.html",
+      "filters": {
+        "type": [
+          "video/*",
+          "image/*",
+          "text/vcard"
+        ]
+      }
+    },
+    "view": {
+      "href": "index.html",
+      "filters": {
+        "type": "url",
+        "url": {
+          "required": true,
+          "pattern": "^https://chat\\.whatsapp\\.com/[0-9A-Za-z]+$",
+          "regexp": "^https://chat\\.whatsapp\\.com/[0-9A-Za-z]+$"
+        }
+      }
+    }
+  },
+  "csp": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube.com",
+  "origin": "app://messagram.herokuapp.com"
 }

@@ -17,26 +17,30 @@ const ChatController = {
             break;
             case 'updateNewMessage' :
             	// update the chat data with the new payload
-            	const newChatData = dataApp.updateNewChat.map(c => {
-            
-            		return {
-            			...c,
-            			last_message : (c.id === parse.message.chat_id ) ? 
-            			parse.message : c.last_message,
-            			unread_count: (c.id === parse.message.chat_id ) ? 
-            			c.unread_count += 1 : c.unread_count,
-            		}
-            	});
-            	console.log(newChatData, 'transform chat data');
-            	// save to database for the new chat
-            	if(dataApp.updateNewMessage)
-            		dataApp.updateNewMessage.push(parse.message);
+            	if(dataApp && dataApp.updateNewChat){
+					const newChatData = dataApp.updateNewChat.map(c => {
 
-				DataServices.saveData('messagram_data_app', {
-					...dataApp,
-					updateNewChat: newChatData,
-				});
-            	return newChatData;
+						return {
+							...c,
+							last_message : (c.id === parse.message.chat_id ) ? 
+							parse.message : c.last_message,
+							unread_count: (c.id === parse.message.chat_id ) ? 
+							c.unread_count += 1 : c.unread_count,
+						}
+					});
+					console.log(newChatData, 'transform chat data');
+					// save to database for the new chat
+					if(dataApp.updateNewMessage)
+						dataApp.updateNewMessage.push(parse.message);
+
+					DataServices.saveData('messagram_data_app', {
+						...dataApp,
+						updateNewChat: newChatData,
+					});
+					return newChatData;
+            	}
+            	return [];
+            	
             break;
             case 'updateNewChat' :
 				// update the chat data with the new payload
@@ -60,7 +64,10 @@ const ChatController = {
 				// 	...dataApp,
 				// 	updateNewChat: dataApp.updateNewChat,
 				// });
-            	return dataApp.updateNewChat;
+				if(dataApp && dataApp.updateNewChat){
+					return dataApp.updateNewChat;
+				}
+            	return [];
             break;
           }
           // console.log('Message received. ', JSON.parse(_payload));

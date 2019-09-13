@@ -85,7 +85,6 @@ function Chats(props) {
 
   const registerOnMessage = async (data) => {
     const newChatList = await ChatController.transformChatData(data);
-    console.log(newChatList);
     // const dataApp = await DataServices.getData('messagram_data_app');
     if(newChatList && newChatList.length > 0)
     {

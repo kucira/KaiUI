@@ -56,6 +56,7 @@ export function askPermission() {
 }
 
 export function register(config) {
+
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
@@ -67,9 +68,10 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`;
-
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker-custom.js`;
+      console.log(swUrl);
       if (isLocalhost) {
+        console.log(isLocalhost);
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
 
@@ -83,7 +85,8 @@ export function register(config) {
         });
       } else {
         // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config);
+        checkValidServiceWorker(swUrl, config);
+        // registerValidSW(swUrl, config);
       }
     });
   }
@@ -102,10 +105,10 @@ function registerValidSW(swUrl, config) {
       console.log("Registering Push...");
       try
       {
-        const subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_VAPID_PUBLIC_KEY)
-      });
+        const subscription = await registration.pushManager.subscribe();
+        //const newEndpoint = subscription.endpoint;
+        alert(subscription);
+        console.log(subscription);
         localStorage.setItem('subscription', JSON.stringify(subscription));
         console.log(subscription);
         console.log("Push Registered...");
@@ -115,8 +118,20 @@ function registerValidSW(swUrl, config) {
       }
   }
   
-      //register firebase messaging with service worker
-      // firebase.messaging().useServiceWorker(registration);
+      // register firebase messaging with service worker
+      const messaging = firebase.messaging();
+      messaging.useServiceWorker(registration);
+      console.log(messaging);
+
+      try {
+          const res = await messaging.requestPermission();
+          const token = await messaging.getToken();
+          localStorage.setItem('ft', token);
+          console.log('here is your firebase token :', token);
+          return token;
+        } catch (error) {
+          console.log(error);
+        }
 
       //on update
       registration.onupdatefound = () => {
@@ -165,12 +180,16 @@ function checkValidServiceWorker(swUrl, config) {
     .then(response => {
       // Ensure service worker exists, and that we really are getting a JS file.
       const contentType = response.headers.get('content-type');
+      console.log(response);
+      console.log(contentType);
       if (
         response.status === 404 ||
         (contentType != null && contentType.indexOf('javascript') === -1)
       ) {
+        console.log(contentType.indexOf('javascript'));
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {
+          console.log('reload');
           registration.unregister().then(() => {
             window.location.reload();
           });
