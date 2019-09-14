@@ -155,6 +155,9 @@ function Messages(props) {
                               leftText='Cancel'
                               rightText=''
                               centerText='Select'
+                              backCallback={()=> {
+                                setIsOptions(false);
+                              }}
                               leftCallback={() => {
                                 setIsOptions(false);
                               }}/>
@@ -174,12 +177,17 @@ function Messages(props) {
                       <Bubble key={Math.random() * 9999}
                               isSelf={m.sender_user_id !== Number(match.params.id)}
                               focusColor={colors.cyan}
+                              name={m.sender_user_id}
                               content={translateTypeTextMessage(m)}
                               time={moment.unix(m.date).format('HH:mm')} 
                               data={m}
                               leftText='More'
                               rightText='Options'
                               centerText='Info'
+                              backCallback={(e)=> {
+                                e.preventDefault();
+                                history.goBack();
+                              }}
                               leftCallback={() => {
                                 history.goBack();
                               }}
@@ -201,6 +209,10 @@ function Messages(props) {
                   setIsOptions(true);
                 }}
                 leftCallback={() => {
+                  history.goBack();
+                }}
+                backCallback={(e) => {
+                  e.preventDefault();
                   history.goBack();
                 }}
                 centerCallback={() => {

@@ -11,6 +11,7 @@ const Bubble = React.memo(
     const {
       content,
       time,
+      name,
       focusColor,
       forwardedRef,
       index,
@@ -24,6 +25,7 @@ const Bubble = React.memo(
       centerCallback,
       leftCallback,
       rightCallback,
+      backCallback,
       softKeyManager,
     } = props;
 
@@ -49,7 +51,10 @@ const Bubble = React.memo(
               },
               rightCallback: () => {
                   rightCallback();
-              }
+              },
+              backCallback: (e) => {
+                  backCallback(e);
+              },
           });
       }
     }
@@ -66,6 +71,7 @@ const Bubble = React.memo(
           isSelf && (
              <li className="self">
                   <div className="messages">
+                    <p className="name">{name}</p>
                     <p>{content}</p>
                     <time dateTime={time}>{time}</time>
                   </div>
@@ -76,6 +82,7 @@ const Bubble = React.memo(
           !isSelf && (
               <li className="other">
                 <div className="messages">
+                    <p className="name">{name}</p>
                     <p>{content}</p>
                     <time dateTime={time}>{time}</time>
                 </div>
@@ -94,6 +101,7 @@ Bubble.propTypes = {
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]),
+  name: PropTypes.string,
   index: PropTypes.number,
   onFocusChange: PropTypes.func,
   data: PropTypes.object,
@@ -103,6 +111,7 @@ Bubble.propTypes = {
   centerCallback: PropTypes.func,
   leftCallback: PropTypes.func,
   rightCallback: PropTypes.func,
+  backCallback: PropTypes.func,
   content: PropTypes.string,
   time: PropTypes.string,
 };
@@ -113,6 +122,7 @@ Bubble.defaultProps = {
   centerCallback: ()=>{},
   leftCallback: ()=>{},
   rightCallback: ()=>{},
+  backCallback: ()=>{},
 };
 
 export default React.forwardRef((props, ref) => (

@@ -124,9 +124,9 @@ function Login(props) {
                         if(!loading) {
                           try {
                             // statements
+                            setLoading(true);
                             const result = await LoginController.getCode(phone, token);
                             console.log(result);
-                            setLoading(true);
                             if(!result.data.initClient) {
                               const { data } = await LoginController.getMe(phone, token); //check the user info
                               
@@ -141,6 +141,9 @@ function Login(props) {
                                 console.log(data);
                                 history.replace('/chats');
                               }
+                            }
+                            else{
+                              history.push('/auth');
                             }
                             
                           } catch(e) {

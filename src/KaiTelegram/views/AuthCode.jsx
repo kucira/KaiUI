@@ -27,6 +27,7 @@ function AuthCode(props) {
       const { payload } = _payload.data;
       const parse = JSON.parse(payload);
       const type = String(parse['@type']) || '';
+      console.log(type);
       if(type.includes('error')) {
         setLoading(false);
         alert(parse.message);
@@ -34,10 +35,10 @@ function AuthCode(props) {
       else if(type.includes('updateUser')){
         history.replace('/chats');
       }
-      else{
-        localStorage.setItem('isLogin', 1);
-        history.replace('/chats');
-      }
+      // else{
+      //   localStorage.setItem('isLogin', 1);
+      //   history.replace('/chats');
+      // }
     });
     return () => {
       firebaseListener();

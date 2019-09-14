@@ -26,6 +26,7 @@ const Input = React.memo(
             centerCallback,
             leftCallback,
             rightCallback,
+            backCallback,
         } = props;
 
         const [isFocused, setFocused] = useState(false);
@@ -54,6 +55,9 @@ const Input = React.memo(
                         },
                         rightCallback: () => {
                             rightCallback();
+                        },
+                        backCallback: (e) => {
+                            backCallback(e);
                         }
                     });
                 } else {
@@ -115,6 +119,7 @@ Input.defaultProps = {
     centerCallback: ()=>{},
     leftCallback: ()=>{},
     rightCallback: ()=>{},
+    backCallback: ()=>{},
 };
 
 export default React.forwardRef((props, ref) => (

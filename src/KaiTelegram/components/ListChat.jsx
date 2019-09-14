@@ -24,6 +24,7 @@ const ListChat = React.memo(
       centerCallback,
       leftCallback,
       rightCallback,
+      backCallback,
       softKeyManager,
       data,
     } = props;
@@ -55,6 +56,9 @@ const ListChat = React.memo(
               },
               rightCallback: () => {
                   rightCallback();
+              },
+              backCallback: (e) => {
+                  backCallback(e);
               }
           });
       }
@@ -112,6 +116,7 @@ ListChat.propTypes = {
   centerCallback: PropTypes.func,
   leftCallback: PropTypes.func,
   rightCallback: PropTypes.func,
+  backCallback: PropTypes.func,
   data: PropTypes.object,
 };
 

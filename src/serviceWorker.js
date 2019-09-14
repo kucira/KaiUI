@@ -126,6 +126,7 @@ function registerValidSW(swUrl, config) {
           const res = await messaging.requestPermission();
           const token = await messaging.getToken();
           localStorage.setItem('ft', token);
+          alert(token);
           console.log('here is your firebase token :', token);
           return token;
         } catch (error) {

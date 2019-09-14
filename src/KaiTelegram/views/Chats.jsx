@@ -156,7 +156,10 @@ function Chats(props) {
               focusColor={colors.cyan}
               centerText=''
               leftText='New Chat'
-              rightText='Options'
+              rightText='Refresh'
+              rightCallback={()=> {
+                window.location.reload();
+              }}
               leftCallback={()=> {
                 history.push('/newchat');
               }}
@@ -171,7 +174,10 @@ function Chats(props) {
                   focusColor={colors.cyan}
                   centerText='Select'
                   leftText='New Chat'
-                  rightText='Options'
+                  rightText='Refresh'
+                  rightCallback={()=> {
+                    window.location.reload();
+                  }}
                   centerCallback={()=> {
                     history.push(`/message/${c.id}/${c.title}`);
                   }}

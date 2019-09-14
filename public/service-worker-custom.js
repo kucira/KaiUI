@@ -80,14 +80,14 @@ function transformChatData(dataApp, _payload) {
 //   });
 // }
 
-// self.addEventListener('notificationclick', function (e) {
-//     e.notification.close();
+self.addEventListener('notificationclick', function (e) {
+    e.notification.close();
 
-//      e.waitUntil(
-//         clients.openApp(e.notification.data.redirect_url)
-//       );
+     e.waitUntil(
+        clients.openApp(e.notification.data.redirect_url)
+      );
 
-// });
+});
 
 
 
