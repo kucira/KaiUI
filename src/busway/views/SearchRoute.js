@@ -9,9 +9,10 @@ import localforage from 'localforage';
 import Spinner from 'react-spinner-material';
 import ListView from '../../views/ListView/ListView';
 import ArrowListItem from '../../components/ArrowListItem/ArrowListItem';
+import TextListItem from '../../components/TextListItem/TextListItem';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-import ListChat from '../components/ListChat';
+import ListRoute from '../components/ListRoute';
 import colors from '../../theme/colors.scss';
 
 
@@ -26,6 +27,7 @@ function SearchRoute(props) {
 
   const [routeList, setRouteList] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [detailRoute, setDetailRoute] = useState([]);
   let countDown = 15;
   let id = 0;
 
@@ -38,11 +40,27 @@ function SearchRoute(props) {
         }
         else{
           clearInterval(id);
+          setLoading(true);
+          setLocationListFrom([{
+            name:'Loading',
+            address:''
+          }]);
+          setLocationListTo([]);
+          setDetailRoute([]);
+          setRouteList([]); 
           id = null;
           const input = document.getElementById('fromInput');
-          setLoading(true);
-          const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/search-location/${input.value}`);
-          setLocationListFrom(data.locations);
+          try {
+            // statements
+            const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/search-location/${input.value}`);
+            setLocationListFrom(data.locations);
+          } catch(e) {
+            setLocationListFrom([{
+              name:'Not found, try again later',
+              address:''
+            }]);
+            console.log(e);
+          }
           setLocationListTo([]);
           setLoading(false);
         }
@@ -60,11 +78,28 @@ function SearchRoute(props) {
         }
         else{
           clearInterval(id);
+          setLoading(true);
+          setLocationListTo([{
+            name:'Loading',
+            address:''
+          }]);
+          setLocationListFrom([]);
+          setDetailRoute([]);
+          setRouteList([]); 
           id = null;
           const input = document.getElementById('toInput');
-          setLoading(true);
-          const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/search-location/${input.value}`);
-          setLocationListTo(data.locations);
+          try {
+            // statements
+            const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/search-location/${input.value}`);
+            setLocationListTo(data.locations);
+          } catch(e) {
+            // statements
+            setLocationListTo([{
+              name:'Not found, try again later',
+              address:''
+            }]);
+            console.log(e);
+          }
           setLocationListFrom([]);
           setLoading(false);
         }
@@ -103,7 +138,7 @@ function SearchRoute(props) {
           leftText=''
           rightText='Busway'
           leftCallback={()=> {
-            console.log('');
+            setDetailRoute([]);
           }}
           rightCallback={() => {
             history.push('/busway');
@@ -119,7 +154,7 @@ function SearchRoute(props) {
           leftText=''
           rightText='Busway'
           leftCallback={()=> {
-            console.log('');
+            setDetailRoute([]);
           }}
           rightCallback={() => {
             history.push('/busway');
@@ -137,6 +172,7 @@ function SearchRoute(props) {
               leftText='Back'
               rightText=''
               leftCallback={() => {
+                setDetailRoute([]);
               }}
               centerCallback={()=> {
                 setFromObject(c);
@@ -161,6 +197,7 @@ function SearchRoute(props) {
               leftText='Back'
               rightText=''
               leftCallback={() => {
+                setDetailRoute([]);
               }}
               centerCallback={()=> {
                 setToObject(c);
@@ -176,36 +213,61 @@ function SearchRoute(props) {
         }
 
         {
-          routeList.map(c => (
-            <ArrowListItem
-              key={Math.random()}
-              primary={c.overview.summary}
-              secondary={JSON.stringify(c.overview.summary)}
-              focusColor={colors.cyan}
-              centerText='Select'
-              leftText='Back'
-              rightText=''
-              leftCallback={() => {
-                history.goBack();
-              }}
-              centerCallback={()=> {
-                
-              }}
-              rightCallback={()=> {
-              }}
-              backCallback={(e)=> {
-                e.preventDefault();
-                history.goBack();
-              }}
-            />))
+          routeList.map(c => {
+            const { summary, price } = c.overview;
+            const { segments } = c.details;
+            const arr = [];
+            const mappingSummary = (data) => {
+              const obj = data.map(m => {
+                console.log(m, 'm');
+                if(m['walking']){
+                  arr.push(`walking to : ${m['walking'].location.end}-${m['walking'].distance/1000} km | ${m['walking'].time.duration} minutes`);
+                }
+                else if(m['public']){
+                  m['public'].departures.map(o => {
+                    arr.push(`public : ${o.name} - ${o.icon} | departs in : ${o.departsIn || ''} minutes`);
+                  });
+                  m['public'].main.stops.map(s => {
+                    arr.push(`stop : ${s}`);
+                  })
+                }
+              })
+            }
+
+
+            console.log(mappingSummary(segments));
+            console.log(arr);
+            setDetailRoute(arr);
+
+
+            return(
+              <ListRoute
+                key={Math.random()}
+                focusColor={colors.cyan}
+                primary={price && price.summary || ''}
+                centerText='Select'
+                leftText='Back'
+                rightText=''
+                leftCallback={() => {
+                    setDetailRoute([]);
+                }}
+                centerCallback={()=> {
+                  
+                }}
+                rightCallback={()=> {
+                }}
+              />
+            )}
+          )
         }
-        <Button text='Search' 
+        <Button text={isLoading ? 'Loading' : 'Search'} 
+                focusColor={colors.cyan}
                 centerCallback={ async () => {
                   setLoading(true);
                   const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/search-route/${fromObject.id}/${toObject.id}`);
                   setLocationListTo([]);
                   setLocationListFrom([]);
-                  console.log(data);
+                  console.log(data.routeGroups[0].routes);
                   if(data){
                     setRouteList(data.routeGroups[0].routes);  
                   }
@@ -226,7 +288,34 @@ function SearchRoute(props) {
               backgroundColor={colors.watTheBlue} />
         <div className="content">
           {
-            renderList()
+            detailRoute.length <= 0 && renderList()
+          }
+          {
+            detailRoute.length > 0 &&
+            <ListView>
+              {
+                detailRoute.map(item => (
+                  <TextListItem
+                      key={Math.random()}
+                      primary={item}
+                      focusColor={colors.cyan}
+                      centerText='Select'
+                      leftText='Back'
+                      rightText=''
+                      leftCallback={() => {
+                        setDetailRoute([]);
+                        setRouteList([]); 
+                      }}
+                      centerCallback={()=> {
+                      }}
+                      rightCallback={()=> {
+                        
+                      }}
+
+                    />
+                ))
+              }
+            </ListView>
           }
           {
             isLoading && (
@@ -241,6 +330,7 @@ function SearchRoute(props) {
             )
           }
         </div>
+        
     </div>
   );
 }
