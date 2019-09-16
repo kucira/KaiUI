@@ -95,10 +95,10 @@ function Home(props) {
           onInputChange={handleInputChange}
           focusColor={colors.cyan}
           centerText=''
-          leftText=''
+          leftText='Back'
           rightText=''
           leftCallback={()=> {
-            console.log('');
+            history.goBack();
           }}
         />
         
