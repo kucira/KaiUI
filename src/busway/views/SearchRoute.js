@@ -12,7 +12,6 @@ import ArrowListItem from '../../components/ArrowListItem/ArrowListItem';
 import TextListItem from '../../components/TextListItem/TextListItem';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-import ListRoute from '../components/ListRoute';
 import colors from '../../theme/colors.scss';
 
 
@@ -117,13 +116,36 @@ function SearchRoute(props) {
     }
   }
 
-  const mappingData = (data) => {
+  const mappingData = () => {
+        const arr = [];
+        routeList.map(c => {
+          const { summary, price } = c.overview;
+          const { segments } = c.details;
+          const mappingSummary = (data) => {
+            const obj = data.map(m => {
+              console.log(m, 'm');
+              if(m['walking']){
+                arr.push(`walking to : ${m['walking'].location.end}-${m['walking'].distance/1000} km | ${m['walking'].time.duration} minutes`);
+              }
+              else if(m['public']){
+                m['public'].departures.map(o => {
+                  arr.push(`public : ${o.name} - ${o.icon} | departs in : ${o.departsIn || ''} minutes`);
+                });
+                m['public'].main.stops.map(s => {
+                  arr.push(`stop : ${s}`);
+                })
+              }
+            })
+          }
 
+          mappingSummary(segments);
+      }); 
+      setDetailRoute(arr);
   }
-  
-  useEffect(() => {
 
-  }, [])
+  useEffect(() => {
+    mappingData();
+  }, [routeList])
 
   const renderList = () => {
     return (
@@ -210,55 +232,6 @@ function SearchRoute(props) {
               }}
 
             />))
-        }
-
-        {
-          routeList.map(c => {
-            const { summary, price } = c.overview;
-            const { segments } = c.details;
-            const arr = [];
-            const mappingSummary = (data) => {
-              const obj = data.map(m => {
-                console.log(m, 'm');
-                if(m['walking']){
-                  arr.push(`walking to : ${m['walking'].location.end}-${m['walking'].distance/1000} km | ${m['walking'].time.duration} minutes`);
-                }
-                else if(m['public']){
-                  m['public'].departures.map(o => {
-                    arr.push(`public : ${o.name} - ${o.icon} | departs in : ${o.departsIn || ''} minutes`);
-                  });
-                  m['public'].main.stops.map(s => {
-                    arr.push(`stop : ${s}`);
-                  })
-                }
-              })
-            }
-
-
-            console.log(mappingSummary(segments));
-            console.log(arr);
-            setDetailRoute(arr);
-
-
-            return(
-              <ListRoute
-                key={Math.random()}
-                focusColor={colors.cyan}
-                primary={price && price.summary || ''}
-                centerText='Select'
-                leftText='Back'
-                rightText=''
-                leftCallback={() => {
-                    setDetailRoute([]);
-                }}
-                centerCallback={()=> {
-                  
-                }}
-                rightCallback={()=> {
-                }}
-              />
-            )}
-          )
         }
         <Button text={isLoading ? 'Loading' : 'Search'} 
                 focusColor={colors.cyan}
