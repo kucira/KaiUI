@@ -29,27 +29,38 @@ function Login(props) {
 
   let firebaseListener;
 
-  useEffect(() => {
-    const messaging = firebase.messaging();
-    firebaseListener = messaging.onMessage(async (_payload) => {
-      const { payload } = _payload.data;
-      const parse = JSON.parse(payload);
-      const type = String(parse['@type']) || '';
-      console.log(type.includes('updateUser'));
-      if(type.includes('error')) {
-        setLoading(false);
-        alert(parse.message);
-      }
-      else if(type.includes('updateUser')){
-        history.replace('/chats');
-      }
-      else {
-        history.push('/auth');
-      }
-    });
-    return () => {
-      firebaseListener();
+  const registerOnMessage = () => {
+    if(!window.navigator.serviceWorker){
+      return 'no service worker support';
     }
+
+    window.navigator.serviceWorker.addEventListener('message', (event) => {
+      setLoading(true);
+    });
+  }
+
+  useEffect(() => {
+    registerOnMessage();
+    // const messaging = firebase.messaging();
+    // firebaseListener = messaging.onMessage(async (_payload) => {
+    //   const { payload } = _payload.data;
+    //   const parse = JSON.parse(payload);
+    //   const type = String(parse['@type']) || '';
+    //   console.log(type.includes('updateUser'));
+    //   if(type.includes('error')) {
+    //     setLoading(false);
+    //     alert(parse.message);
+    //   }
+    //   else if(type.includes('updateUser')){
+    //     history.replace('/chats');
+    //   }
+    //   else {
+    //     history.push('/auth');
+    //   }
+    // });
+    // return () => {
+    //   firebaseListener();
+    // }
   }, [])
 
   useEffect(() => {
@@ -109,49 +120,49 @@ function Login(props) {
 
 
                           // Send Push Notification
-                          // console.log("Sending Push...");
-                          // const subscription = localStorage.getItem('subscription');
-                          // alert(process.env.REACT_APP_BASE_URL);
-                          // alert(subscription);
-                          // await fetch(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
-                          //   method: "POST",
-                          //   body: subscription,
-                          //   headers: {
-                          //     "content-type": "application/json"
-                          //   }
-                          // });
-                          // console.log("Push Sent...");
-                        if(!loading) {
-                          try {
-                            // statements
-                            setLoading(true);
-                            const result = await LoginController.getCode(phone, token);
-                            console.log(result);
-                            if(!result.data.initClient) {
-                              const { data } = await LoginController.getMe(phone, token); //check the user info
+                          console.log("Sending Push...");
+                          const subscription = localStorage.getItem('subscription');
+                          alert(process.env.REACT_APP_BASE_URL);
+                          alert(subscription);
+                          await fetch(`${process.env.REACT_APP_BASE_URL}/subscribe`, {
+                            method: "POST",
+                            body: subscription,
+                            headers: {
+                              "content-type": "application/json"
+                            }
+                          });
+                          console.log("Push Sent...");
+                        // if(!loading) {
+                        //   try {
+                        //     // statements
+                        //     setLoading(true);
+                        //     const result = await LoginController.getCode(phone, token);
+                        //     console.log(result);
+                        //     if(!result.data.initClient) {
+                        //       const { data } = await LoginController.getMe(phone, token); //check the user info
                               
-                              if(data.message) {
-                                const parse = JSON.parse(data.message);
-                                console.log(parse);
-                                if(parse['@type'] === 'error'){
-                                  alert(data.message);
-                                  setLoading(false)
-                                }
-                              }else{
-                                console.log(data);
-                                history.replace('/chats');
-                              }
-                            }
-                            else{
-                              history.push('/auth');
-                            }
+                        //       if(data.message) {
+                        //         const parse = JSON.parse(data.message);
+                        //         console.log(parse);
+                        //         if(parse['@type'] === 'error'){
+                        //           alert(data.message);
+                        //           setLoading(false)
+                        //         }
+                        //       }else{
+                        //         console.log(data);
+                        //         history.replace('/chats');
+                        //       }
+                        //     }
+                        //     else{
+                        //       history.push('/auth');
+                        //     }
                             
-                          } catch(e) {
+                        //   } catch(e) {
                             
-                            // statements
-                            alert(e);
-                          }
-                        }
+                        //     // statements
+                        //     alert(e);
+                        //   }
+                        // }
 
                       }}/>
           </ListView>

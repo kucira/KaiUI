@@ -12,8 +12,8 @@ import Message from './views/Message';
 import NewChat from './views/NewChat';
 import StartPage from './views/StartPage';
 import Page from './components/Page'
-import { initializeFirebase }  from './Utils/PushNotification';
-import * as serviceWorker from '../serviceWorker';
+// import { initializeFirebase }  from './Utils/PushNotification';
+// import * as serviceWorker from '../serviceWorker';
 import '../App.scss';
 // import './index.scss';
 
@@ -21,11 +21,6 @@ import '../App.scss';
 const socket = '';
 class App extends Component {
     
-    componentDidMount(){
-      initializeFirebase();
-      serviceWorker.register();
-    }
-
     render() {
         return (
         	<SoftKeyProvider>

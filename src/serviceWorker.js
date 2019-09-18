@@ -102,36 +102,41 @@ function registerValidSW(swUrl, config) {
   alert(isReady);
   if(isReady){
     // Register Push
-      // console.log("Registering Push...");
-      // try
-      // {
-      //   const subscription = await registration.pushManager.subscribe();
-      //   //const newEndpoint = subscription.endpoint;
-      //   alert(subscription);
-      //   console.log(subscription);
-      //   localStorage.setItem('subscription', JSON.stringify(subscription));
-      //   console.log(subscription);
-      //   console.log("Push Registered...");
-      // }
-      // catch(error){
-      //   alert(error);
-      // }
+      console.log("Registering Push...");
+      try
+      {
+        // v2 push need vapidkeys and for chrome on mozilla
+        // const subscription = await registration.pushManager.subscribe({
+        //   userVisibleOnly:true,
+        //   applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_VAPID_PUBLIC_KEY)
+        // });
+        // v1 push, for mozilla only
+        const subscription = await registration.pushManager.subscribe();
+        alert(subscription);
+        console.log(subscription);
+        localStorage.setItem('subscription', JSON.stringify(subscription));
+        console.log(subscription);
+        console.log("Push Registered...");
+      }
+      catch(error){
+        alert(error);
+      }
 
       // register firebase messaging with service worker
-      const messaging = firebase.messaging();
-      messaging.useServiceWorker(registration);
-      console.log(messaging);
+      // const messaging = firebase.messaging();
+      // messaging.useServiceWorker(registration);
+      // console.log(messaging);
 
-      try {
-          const res = await messaging.requestPermission();
-          const token = await messaging.getToken();
-          localStorage.setItem('ft', token);
-          alert(token);
-          console.log('here is your firebase token :', token);
-          return token;
-        } catch (error) {
-          console.log(error);
-        }
+      // try {
+      //     const res = await messaging.requestPermission();
+      //     const token = await messaging.getToken();
+      //     localStorage.setItem('ft', token);
+      //     alert(token);
+      //     console.log('here is your firebase token :', token);
+      //     return token;
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
 
   }
   

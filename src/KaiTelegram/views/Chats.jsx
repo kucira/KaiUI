@@ -96,14 +96,14 @@ function Chats(props) {
   useEffect(() => {
     // setChats(mockChats);
     // setChatsList(mockChats);
-    const messaging = firebase.messaging();
+    // const messaging = firebase.messaging();
 
-    fetchData();
+    // fetchData();
 
-    firebaseListener = messaging.onMessage(async (_payload) => {
-      const { payload } = _payload.data;
-      registerOnMessage(payload);
-    });
+    // firebaseListener = messaging.onMessage(async (_payload) => {
+    //   const { payload } = _payload.data;
+    //   registerOnMessage(payload);
+    // });
 
     // const phone = localStorage.getItem('phone');
     // socket.emit('getAllChat', {phone});
@@ -115,7 +115,7 @@ function Chats(props) {
     // });
 
     return () => {
-      firebaseListener();
+      // firebaseListener();
       // socket.removeEventListener('updateCallback');
       // socket.removeEventListener('responseAllChat');
     }

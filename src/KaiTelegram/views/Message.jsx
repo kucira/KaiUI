@@ -93,14 +93,14 @@ function Messages(props) {
   useEffect(() => {
     // const phone = localStorage.getItem('phone');
     // socket.emit('getHistoryChat', {phone, chatId:match.params.id});
-    const messaging = firebase.messaging();
+    // const messaging = firebase.messaging();
 
-    fetchData();
+    // fetchData();
 
-    firebaseListener = messaging.onMessage(async (_payload) => {
-      const { payload } = _payload.data;
-      registerOnMessage(payload);
-    });
+    // firebaseListener = messaging.onMessage(async (_payload) => {
+    //   const { payload } = _payload.data;
+    //   registerOnMessage(payload);
+    // });
 
     // socket.on('updateCallback', (data) => {
     //   registerOnMessage(data);
@@ -113,7 +113,7 @@ function Messages(props) {
     // });
 
     return () => {
-      firebaseListener();
+      // firebaseListener();
       // socket.removeEventListener('updateCallback');
       // socket.removeEventListener('responseAllChat');
       // socket.removeEventListener('error');

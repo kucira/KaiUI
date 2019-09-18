@@ -1,15 +1,15 @@
 importScripts('https://cdn.jsdelivr.net/npm/localforage@1.7.3/dist/localforage.min.js');
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
+// importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
+// importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
 //if the service worker failed to register in kaiOS, check the function,
 // cannot use async await keyword, spread and check every each function
 
-firebase.initializeApp({
-    messagingSenderId: "351767822373"
-});
+// firebase.initializeApp({
+//     messagingSenderId: "351767822373"
+// });
 
-const messaging = firebase.messaging();
+// const messaging = firebase.messaging();
 
 function transformChatData(dataApp, _payload) {
     const parse = _payload;
@@ -80,35 +80,66 @@ function transformChatData(dataApp, _payload) {
 //   });
 // }
 
+
 self.addEventListener('notificationclick', function (e) {
     e.notification.close();
 
      e.waitUntil(
-        clients.openApp(e.notification.data.redirect_url)
+        clients.openWindow(e.notification.data.redirect_url)
       );
 
 });
 
-
-
 // self.addEventListener('push', function(event) {
-// 	const data = event.data.json();
-// 	console.log(event.data.json(), 'berhasil');
-// 	let message = '';
-// 	switch(data['@type']){
-// 		case 'error' :
-// 			message = data.message;
-// 			postErrorToClients(data);
-// 			console.log('error')
-// 		break;
-// 	}
+// 	console.log(event, 'berhasil');
 //     event.waitUntil(
-//         registration.showNotification(data['@type'], {
-//             body: event.data ? message : 'no payload',
-//             icon: 'icon.png'
+//         registration.showNotification(event.data.json().title, {
+//             body: event.data ? event.data.text() : 'no payload',
+//             icon: 'https://cdn.iconscout.com/icon/free/png-256/telegram-9-840221.png'
 //         })
 //     );
 // });
+
+
+self.addEventListener('install', function(event) {
+	event.waitUntil(self.skipWaiting());	
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
+
+
+self.addEventListener('push', function(event) {
+	const data = event.data.json();
+	console.log(event, 'berhasil');
+	let message = '';
+	switch(data['@type']){
+		case 'error' :
+			message = data.message;
+			postErrorToClients(data);
+			console.log('error')
+		break;
+	}
+  const promise = self.clients.matchAll({includeUncontrolled: true})
+  .then(clientList => {
+  	console.log(clientList)
+     clientList.forEach(client => client.postMessage({
+     	payload:data,
+     }));
+  });
+  if (event.waitUntil) {
+    event.waitUntil(promise);
+  }
+
+    event.waitUntil(
+        registration.showNotification(event.data.text(), {
+            body: event.data ? message : 'no payload',
+            icon: 'https://cdn.iconscout.com/icon/free/png-256/telegram-9-840221.png'
+        })
+    );
+});
 
 function findData(dataApp, parsePayload) {
   switch(parsePayload['@type']) {
@@ -145,42 +176,42 @@ function showError(parsePayload) {
   }
 }
 
-messaging.setBackgroundMessageHandler(function (payload) {
-console.log(self, 'self');
-console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  // Customize notification here
-  console.log('Message received. on background', JSON.parse(payload.data.payload));
-	const parsePayload = JSON.parse(payload.data.payload);
-	const errorObject = showError(parsePayload);
-	if(errorObject) {
-       return self.registration.showNotification(data['@type'], {
-            body: event.data ? message : 'no payload',
-            icon: 'icon.png'
-        })
+// messaging.setBackgroundMessageHandler(function (payload) {
+// console.log(self, 'self');
+// console.log('[firebase-messaging-sw.js] Received background message ', payload);
+//   // Customize notification here
+//   console.log('Message received. on background', JSON.parse(payload.data.payload));
+// 	const parsePayload = JSON.parse(payload.data.payload);
+// 	const errorObject = showError(parsePayload);
+// 	if(errorObject) {
+//        return self.registration.showNotification(data['@type'], {
+//             body: event.data ? message : 'no payload',
+//             icon: 'icon.png'
+//         })
 
-	}
+// 	}
 
-  localforage.getItem('messagram_data_app').then( function(dataApp) {
+//   localforage.getItem('messagram_data_app').then( function(dataApp) {
 	  
-	  const result = transformChatData(dataApp, parsePayload);
+// 	  const result = transformChatData(dataApp, parsePayload);
 
-	  const forNotificationData = findData(dataApp, parsePayload);
+// 	  const forNotificationData = findData(dataApp, parsePayload);
 
-	  const notificationTitle = `${forNotificationData.title}`;
-	  const notificationOptions = {
-	    body: `${forNotificationData.content}`,
-	    icon: 'https://cdn.iconscout.com/icon/free/png-256/telegram-9-840221.png',
-	    tag: `${forNotificationData.id}`,
-	    renotify: true,
-	    data:{
-	      redirect_url: forNotificationData.url,
-	    }
-	  };
+// 	  const notificationTitle = `${forNotificationData.title}`;
+// 	  const notificationOptions = {
+// 	    body: `${forNotificationData.content}`,
+// 	    icon: 'https://cdn.iconscout.com/icon/free/png-256/telegram-9-840221.png',
+// 	    tag: `${forNotificationData.id}`,
+// 	    renotify: true,
+// 	    data:{
+// 	      redirect_url: forNotificationData.url,
+// 	    }
+// 	  };
 	  
-	  return self.registration.showNotification(notificationTitle,
-	    notificationOptions);
-  }).catch(function(err) {
-    // This code runs if there were any errors
-    console.log(err);
-	});
-});
+// 	  return self.registration.showNotification(notificationTitle,
+// 	    notificationOptions);
+//   }).catch(function(err) {
+//     // This code runs if there were any errors
+//     console.log(err);
+// 	});
+// });
